@@ -12,6 +12,9 @@ public class Cliente implements Parcelable {
     private String apellido_materno;
     private String nombres;
     private String nombre_completo;
+    private String direccion;
+    private String tipo_doc;
+    private String coodenadas;
 
     public Cliente() {
     }
@@ -56,12 +59,39 @@ public class Cliente implements Parcelable {
         this.nombre_completo = nombre_completo;
     }
 
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getTipo_doc() {
+        return tipo_doc;
+    }
+
+    public void setTipo_doc(String tipo_doc) {
+        this.tipo_doc = tipo_doc;
+    }
+
+    public String getCoodenadas() {
+        return coodenadas;
+    }
+
+    public void setCoodenadas(String coodenadas) {
+        this.coodenadas = coodenadas;
+    }
+
     protected Cliente(Parcel in) {
         codigo = in.readString();
         apellido_paterno = in.readString();
         apellido_materno = in.readString();
         nombres = in.readString();
         nombre_completo = in.readString();
+        direccion = in.readString();
+        tipo_doc = in.readString();
+        coodenadas = in.readString();
     }
 
     @Override
@@ -76,6 +106,9 @@ public class Cliente implements Parcelable {
         dest.writeString(apellido_materno);
         dest.writeString(nombres);
         dest.writeString(nombre_completo);
+        dest.writeString(direccion);
+        dest.writeString(tipo_doc);
+        dest.writeString(coodenadas);
     }
 
     @SuppressWarnings("unused")

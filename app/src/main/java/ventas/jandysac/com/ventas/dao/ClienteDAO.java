@@ -23,6 +23,10 @@ public class ClienteDAO {
                     Cliente cliente = new Cliente();
                     cliente.setCodigo(cursor.isNull(cursor.getColumnIndex("codigo")) ? "" : cursor.getString(cursor.getColumnIndex("codigo")));
                     cliente.setNombre_completo(cursor.isNull(cursor.getColumnIndex("nombre_completo")) ? "" : cursor.getString(cursor.getColumnIndex("nombre_completo")));
+                    cliente.setDireccion(cursor.isNull(cursor.getColumnIndex("direccion")) ? "" : cursor.getString(cursor.getColumnIndex("direccion")));
+                    cliente.setTipo_doc(cursor.isNull(cursor.getColumnIndex("tipo_doc")) ? "" : cursor.getString(cursor.getColumnIndex("tipo_doc")));
+                    cliente.setCoodenadas(cursor.isNull(cursor.getColumnIndex("coordenadas")) ? "-12.0731275,-77.054646" : cursor.getString(cursor.getColumnIndex("coordenadas")));
+
                     listCliente.add(cliente);
                 } while (cursor.moveToNext());
             }

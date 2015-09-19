@@ -9,4 +9,14 @@
 
     <string name="logout">Cerrar sesión</string>
     <string name="msg_error_usuario_contrasenia">Error con el usuario/contraseña</string>
+
+    <!--activity_datos_cliente-->
+    <string name="label_codigo">Código</string>
+    <string name="label_nombre">Nombre</string>
+    <string name="label_direccion">Dirección</string>
+    <string name="label_tipo_doc">T. Doc</string>
+    <string name="label_mapa">Mapa</string>
+    <string name="label_pedido">Pedido</string>
+
+
 </resources>

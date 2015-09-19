@@ -20,6 +20,8 @@ import ventas.jandysac.com.ventas.entities.Cliente;
  * Created by Rodolfo on 09/09/2015.
  */
 public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapter.RVClienteAdapterCallBack {
+
+    public final static String ARG_CLIENTE = "arg_cliente";
     private EditText txtBusqueda;
     private RecyclerView rvCliente;
     private RVClienteAdapter rvClienteAdapter;
@@ -70,7 +72,8 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
     @Override
     public void onClienteClick(Cliente cliente) {
         Intent intent = new Intent(BusquedaCliente.this, DatosCliente.class);
-        startActivityForResult(intent, REQUEST_CODE);
+        intent.putExtra(ARG_CLIENTE, cliente);
+        startActivity(intent);
     }
 
     @Override
