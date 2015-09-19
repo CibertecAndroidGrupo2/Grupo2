@@ -27,7 +27,7 @@
             android:alpha="0.50" />
 
             <EditText
-                android:id="@+id/txtUsuario"
+                android:id="@+id/etUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Usuario"
@@ -53,7 +53,7 @@
             android:alpha="0.50" />
 
             <EditText
-                android:id="@+id/txtPassword"
+                android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contraseña"
