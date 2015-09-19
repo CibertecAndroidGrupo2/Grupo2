@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * Created by Administrator on 29/08/2015.
- */
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     //The Android's default system path of your application database.
@@ -125,7 +122,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         //Open the database
         String myPath = DB_PATH + DB_NAME;
-        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
 
     }
 
