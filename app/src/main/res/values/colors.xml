@@ -7,4 +7,6 @@
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#00F</color>
 
+    <color name="drawer_opciones_button">#1FDCE6</color>
+
 </resources>

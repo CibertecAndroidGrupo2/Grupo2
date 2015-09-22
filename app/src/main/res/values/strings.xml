@@ -28,4 +28,7 @@
     <string name="drawer_item_sincronizar_datos">SINCRONIZAR DATOS</string>
     <string name="drawer_item_cerrar_dia">CERRAR DIA</string>
 
+    <string name="drawer_item_ayuda">AYUDA</string>
+    <string name="drawer_item_cerrar_session">CERRAR SESSION</string>
+
 </resources>

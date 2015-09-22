@@ -1,6 +1,7 @@
 package ventas.jandysac.com.ventas;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -30,7 +31,7 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
     /* DrawerLayout Section */
     private DrawerLayout dlmenu;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private TextView tvOpcion1, tvOpcion2, tvOpcion3, tvOpcion4;
+    private TextView tvOpcion1, tvOpcion2, tvOpcion3, tvOpcion4, tvOpcionAyuda,tvOpcionCerrarSes;
     /* End DrawerLayout Section */
 
     private EditText txtBusqueda;
@@ -38,6 +39,8 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
     private RVClienteAdapter rvClienteAdapter;
     private DataBaseHelper dataBaseHelper;
     private final static int REQUEST_CODE = 1;
+
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +53,15 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
         tvOpcion3 = (TextView) findViewById(R.id.tvOpcion3);
         tvOpcion4 = (TextView) findViewById(R.id.tvOpcion4);
 
+        tvOpcionAyuda = (TextView) findViewById(R.id.tvOpcionAyuda);
+        tvOpcionCerrarSes = (TextView) findViewById(R.id.tvOpcionCerrarSes);
+
         tvOpcion1.setOnClickListener(tvOnClickListener);
         tvOpcion2.setOnClickListener(tvOnClickListener);
         tvOpcion3.setOnClickListener(tvOnClickListener);
         tvOpcion4.setOnClickListener(tvOnClickListener);
+        tvOpcionAyuda.setOnClickListener(tvOnClickListener);
+        tvOpcionCerrarSes.setOnClickListener(tvOnClickListener);
 
         dlmenu = (DrawerLayout) findViewById(R.id.dlMenu);
         actionBarDrawerToggle = new ActionBarDrawerToggle(BusquedaCliente.this, dlmenu, R.string.app_name, R.string.app_name) {
@@ -73,6 +81,8 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
         dlmenu.setDrawerListener(actionBarDrawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        sp = getSharedPreferences(getPackageName(), MODE_PRIVATE);
 
         /* End DrawerLayout Section */
 
@@ -108,9 +118,13 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
             if(opcActual.equals(getResources().getString(R.string.drawer_item_agregar_Pedido))){
                     Intent intent = new Intent(BusquedaCliente.this, MainActivity.class);
                     startActivity(intent);
-                    finish();
             }else if(opcActual.equals(getResources().getString(R.string.drawer_item_consolidar_pedido))){
                 Intent intent = new Intent(BusquedaCliente.this, ConsolidarPedido.class);
+                startActivity(intent);
+            }else if(opcActual.equals(getResources().getString(R.string.drawer_item_cerrar_session))){
+                getSharedPreferences(getPackageName(), MODE_PRIVATE).edit().clear().commit();
+
+                Intent intent = new Intent(BusquedaCliente.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
