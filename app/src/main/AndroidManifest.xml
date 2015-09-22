@@ -44,6 +44,11 @@
             android:name=".BusquedaProducto"
             android:label="@string/title_activity_busqueda_producto" >
         </activity>
+        <activity
+            android:name=".ConsolidarPedido"
+            android:label="@string/title_activity_consolidar_pedido" >
+        </activity>
+
         <activity android:name=".MapaActivity"></activity>
         <activity
             android:name=".ui.UiProductoPrecio"

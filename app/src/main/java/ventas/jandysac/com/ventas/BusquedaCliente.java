@@ -102,6 +102,19 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
         @Override
 
         public void onClick(View view) {
+
+            String opcActual =  ((TextView) view).getText().toString();
+
+            if(opcActual.equals(getResources().getString(R.string.drawer_item_agregar_Pedido))){
+                    Intent intent = new Intent(BusquedaCliente.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+            }else if(opcActual.equals(getResources().getString(R.string.drawer_item_consolidar_pedido))){
+                Intent intent = new Intent(BusquedaCliente.this, ConsolidarPedido.class);
+                startActivity(intent);
+                finish();
+            }
+
             Toast.makeText(BusquedaCliente.this, ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
             dlmenu.closeDrawer(Gravity.START);
         }

@@ -6,6 +6,7 @@
     <string name="title_activity_datos_cliente">DatosCliente</string>
     <string name="title_activity_main_activity2">MainActivity2Activity</string>
     <string name="title_activity_busqueda_producto">BusquedaProducto</string>
+    <string name="title_activity_consolidar_pedido">ConsolidarPedido</string>
 
     <string name="logout">Cerrar sesión</string>
     <string name="msg_error_usuario_contrasenia">Error con el usuario/contraseña</string>
