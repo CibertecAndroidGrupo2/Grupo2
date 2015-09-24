@@ -3,22 +3,22 @@ package ventas.jandysac.com.ventas.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by JoseKoji on 16/09/2015.
- */
 public class Usuario implements Parcelable {
-    private String nombre;
+    private String usuario;
     private String contrasenia;
+    private String nombres;
+    private String apellidos;
+    private String codigo;
 
     public Usuario() {
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public String getContrasenia() {
@@ -29,9 +29,36 @@ public class Usuario implements Parcelable {
         this.contrasenia = contrasenia;
     }
 
+    public String getNombres() {
+        return nombres;
+    }
+
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
     protected Usuario(Parcel in) {
-        nombre = in.readString();
+        usuario = in.readString();
         contrasenia = in.readString();
+        nombres = in.readString();
+        apellidos = in.readString();
+        codigo = in.readString();
     }
 
     @Override
@@ -41,8 +68,11 @@ public class Usuario implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(nombre);
+        dest.writeString(usuario);
         dest.writeString(contrasenia);
+        dest.writeString(nombres);
+        dest.writeString(apellidos);
+        dest.writeString(codigo);
     }
 
     @SuppressWarnings("unused")

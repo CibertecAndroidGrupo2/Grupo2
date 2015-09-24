@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,9 +21,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+
 import ventas.jandysac.com.ventas.adapter.recyclerview.RVClienteAdapter;
 import ventas.jandysac.com.ventas.dao.DataBaseHelper;
+import ventas.jandysac.com.ventas.dao.UsuarioDAO;
 import ventas.jandysac.com.ventas.entities.Cliente;
+import ventas.jandysac.com.ventas.entities.Usuario;
+import ventas.jandysac.com.ventas.util.AesCbcWithIntegrity;
+
+import static ventas.jandysac.com.ventas.util.AesCbcWithIntegrity.decryptString;
+import static ventas.jandysac.com.ventas.util.AesCbcWithIntegrity.generateKeyFromPassword;
 
 public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapter.RVClienteAdapterCallBack {
 
@@ -31,7 +41,7 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
     /* DrawerLayout Section */
     private DrawerLayout dlmenu;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private TextView tvOpcion1, tvOpcion2, tvOpcion3, tvOpcion4, tvOpcionAyuda,tvOpcionCerrarSes;
+    private TextView tvOpcionUsuario, tvOpcion1, tvOpcion2, tvOpcion3, tvOpcion4, tvOpcionAyuda,tvOpcionCerrarSes;
     /* End DrawerLayout Section */
 
     private EditText txtBusqueda;
@@ -48,6 +58,7 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
         setContentView(R.layout.activity_busqueda_cliente);
 
         /* DrawerLayout Section */
+        tvOpcionUsuario = (TextView) findViewById(R.id.tvOpcionUsuario);
         tvOpcion1 = (TextView) findViewById(R.id.tvOpcion1);
         tvOpcion2 = (TextView) findViewById(R.id.tvOpcion2);
         tvOpcion3 = (TextView) findViewById(R.id.tvOpcion3);
@@ -62,6 +73,15 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
         tvOpcion4.setOnClickListener(tvOnClickListener);
         tvOpcionAyuda.setOnClickListener(tvOnClickListener);
         tvOpcionCerrarSes.setOnClickListener(tvOnClickListener);
+
+        sp = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+        if (sp.contains(MainActivity.ARG_NOMAPE) &&
+                !sp.getString(MainActivity.ARG_NOMAPE, "").isEmpty()) {
+            tvOpcionUsuario.setText(sp.getString(MainActivity.ARG_NOMAPE, ""));
+        } else {
+            tvOpcionUsuario.setText("Usuario");
+        }
+
 
         dlmenu = (DrawerLayout) findViewById(R.id.dlMenu);
         actionBarDrawerToggle = new ActionBarDrawerToggle(BusquedaCliente.this, dlmenu, R.string.app_name, R.string.app_name) {
