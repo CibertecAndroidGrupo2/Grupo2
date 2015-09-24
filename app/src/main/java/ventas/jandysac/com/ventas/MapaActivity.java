@@ -33,10 +33,12 @@ public class MapaActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(DatosCliente.ARG_COORDENADAS)) {
             String[] sCoordenadas = getIntent().getStringExtra(DatosCliente.ARG_COORDENADAS).toString().split(",");
+            String nombre_cliente = getIntent().getStringExtra(DatosCliente.ARG_NOMBRE_CLIENTE);
             Double l = Double.valueOf(sCoordenadas[0]);
             Double a = Double.valueOf(sCoordenadas[1]);
 
             coordenadas = new LatLng(l, a);
+            getSupportActionBar().setTitle(String.valueOf(nombre_cliente.toString()));
         }
 
     }

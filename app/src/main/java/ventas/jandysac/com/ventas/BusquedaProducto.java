@@ -119,7 +119,6 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
 //        texto.setText("11.11");
 //        dialog.show();
 
-
         final Dialog dialog = new Dialog(BusquedaProducto.this);
         dialog.setContentView(R.layout.ui_producto_precio);
         dialog.setTitle(producto.getDescripcion());
@@ -140,12 +139,11 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
             @Override
             public void onClick(View v) {
                 TextView txtUiProductoCantidad = (TextView) dialog.findViewById(R.id.txtUiProductoCantidad);
-                Toast.makeText(BusquedaProducto.this, txtUiProductoCantidad.getText(), Toast.LENGTH_SHORT).show();
 
                 PedidoDetalle pedido = new PedidoDetalle();
-                pedido.setCodigo_Producto("111111");
-                pedido.setCantidad(12);
-                pedido.setPrecio(12);
+                pedido.setCodigo_Producto(producto.getCodigo());
+                pedido.setCantidad(Double.valueOf(txtUiProductoCantidad.getText().toString()));
+                pedido.setPrecio(Double.valueOf(producto.getPrecio()));
 
                 PedidoDAO dataGuardar = new PedidoDAO();
 
@@ -154,6 +152,7 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
                 //    dataGuardar.updatePersona(persona);
                 //} else {
                     dataGuardar.addPedidoDetalle(pedido);
+                    Toast.makeText(BusquedaProducto.this, "Prodcuto "+producto.getCodigo()+" fue añadido...", Toast.LENGTH_SHORT).show();
                 //}
 
 

@@ -13,10 +13,12 @@ public class DatosCliente extends AppCompatActivity {
 
     public final static String ARG_COD_CLIENTE = "arg_cod_cliente";
     public final static String ARG_COORDENADAS = "arg_coordenadas";
+    public final static String ARG_NOMBRE_CLIENTE= "arg_nombre_cliente";
     TextView tvClienteCodigo, tvClienteNombre, tvClienteDireccion, tvClienteTipoDoc;
     Button btMapa, btPedido;
     String coordenadas;
     String codigoCliente;
+    String nombreCliente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class DatosCliente extends AppCompatActivity {
             tvClienteTipoDoc.setText(cliente.getTipo_doc());
             coordenadas = cliente.getCoodenadas();
             codigoCliente = cliente.getCodigo();
+            nombreCliente = cliente.getNombre_completo();
 
             btMapa.setOnClickListener(btMapaOnClickListener);
             btPedido.setOnClickListener(btPedidoOnClickListener);
@@ -52,10 +55,9 @@ public class DatosCliente extends AppCompatActivity {
     View.OnClickListener btMapaOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
             Intent intent = new Intent(DatosCliente.this, MapaActivity.class);
             intent.putExtra(ARG_COORDENADAS, coordenadas);
-
+            intent.putExtra(ARG_NOMBRE_CLIENTE, nombreCliente);
             startActivity(intent);
 
         }
@@ -66,9 +68,8 @@ public class DatosCliente extends AppCompatActivity {
         public void onClick(View v) {
 
             //TODO cambiar BusquedaProducto.class por la actividad de Pedido
-            Intent intent = new Intent(DatosCliente.this, BusquedaProducto.class);
+            Intent intent = new Intent(DatosCliente.this, DetallePedido.class);
             intent.putExtra(ARG_COD_CLIENTE, codigoCliente);
-
             startActivity(intent);
 
         }
