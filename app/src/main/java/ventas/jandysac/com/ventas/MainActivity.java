@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     private final String ARG_USER = "arg_user";
     private final String ARG_PASS = "arg_pass";
+    public final static String ARG_NOMAPE = "arg_nomape";
+    public final static String ARG_CODIGO = "arg_codigo";
 
     private String password, salt;
 
@@ -130,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
                     spe.putString(ARG_USER, u);
                     Log.i("MainActivity", "password encriptado: " + civp.toString());
                     spe.putString(ARG_PASS, civp.toString());
+
+                    spe.putString(ARG_NOMAPE, usuario.getNombres() + " " + usuario.getApellidos());
+                    spe.putString(ARG_CODIGO, usuario.getCodigo());
 
                     spe.commit();
 

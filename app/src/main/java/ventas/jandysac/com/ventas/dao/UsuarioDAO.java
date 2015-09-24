@@ -18,8 +18,11 @@ public class UsuarioDAO {
             cursor = DataBaseHelper.myDataBase.query("Usuario", null, "usuario=?", args, null, null, null);
 
             if (cursor.moveToFirst()) {
-                usuario.setNombre(cursor.isNull(cursor.getColumnIndex("usuario")) ? "" : cursor.getString(cursor.getColumnIndex("usuario")));
+                usuario.setUsuario(cursor.isNull(cursor.getColumnIndex("usuario")) ? "" : cursor.getString(cursor.getColumnIndex("usuario")));
                 usuario.setContrasenia(cursor.isNull(cursor.getColumnIndex("contrasenia")) ? "" : cursor.getString(cursor.getColumnIndex("contrasenia")));
+                usuario.setNombres(cursor.isNull(cursor.getColumnIndex("nombres")) ? "" : cursor.getString(cursor.getColumnIndex("nombres")));
+                usuario.setApellidos(cursor.isNull(cursor.getColumnIndex("apellidos")) ? "" : cursor.getString(cursor.getColumnIndex("apellidos")));
+                usuario.setCodigo(cursor.isNull(cursor.getColumnIndex("codigo")) ? "" : cursor.getString(cursor.getColumnIndex("codigo")));
 
             }
         } catch (Exception ex) {
