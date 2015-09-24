@@ -15,10 +15,10 @@ public class UsuarioDAO {
         String[] args = new String[]{nombre};
 
         try {
-            cursor = DataBaseHelper.myDataBase.query("Usuario", null, "nombre=?", args, null, null, null);
+            cursor = DataBaseHelper.myDataBase.query("Usuario", null, "usuario=?", args, null, null, null);
 
             if (cursor.moveToFirst()) {
-                usuario.setNombre(cursor.isNull(cursor.getColumnIndex("nombre")) ? "" : cursor.getString(cursor.getColumnIndex("nombre")));
+                usuario.setNombre(cursor.isNull(cursor.getColumnIndex("usuario")) ? "" : cursor.getString(cursor.getColumnIndex("usuario")));
                 usuario.setContrasenia(cursor.isNull(cursor.getColumnIndex("contrasenia")) ? "" : cursor.getString(cursor.getColumnIndex("contrasenia")));
 
             }

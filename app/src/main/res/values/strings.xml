@@ -24,7 +24,7 @@
 
     <!-- Opciones del Drawer -->
     <string name="drawer_item_agregar_Pedido">AGREGAR PEDIDO</string>
-    <string name="drawer_item_consolidar_pedido">CONSOLIDAD PEDIDO</string>
+    <string name="drawer_item_consolidar_pedido">CONSOLIDAR PEDIDO</string>
     <string name="drawer_item_sincronizar_datos">SINCRONIZAR DATOS</string>
     <string name="drawer_item_cerrar_dia">CERRAR DIA</string>
 
