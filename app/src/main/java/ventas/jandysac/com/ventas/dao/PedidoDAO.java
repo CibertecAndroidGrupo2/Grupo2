@@ -16,7 +16,10 @@ public class PedidoDAO {
         Cursor cursor = null;
 
         try {
-            cursor = DataBaseHelper.myDataBase.query("movimiento_venta_detalle", null, null, null, null, null, null);
+            String query = "SELECT mv.codigo_cliente, mv.importe_neto, mvd.codigo_producto, p.descripcion, mvd.cantidad, mvd.precio, mvd.importe_neto FROM movimiento_venta mv LEFT JOIN movimiento_venta_detalle mvd ON mvd.id_movimiento_venta = mv.id_movimiento_venta LEFT JOIN producto p ON p.codigo= mvd.codigo_producto WHERE mv.codigo_cliente = ? ";
+            //String query = "select * from movimiento_venta_detalle WHERE codigo_producto=?";
+            cursor = DataBaseHelper.myDataBase.rawQuery(query, new String[]{"00017865"});
+            //cursor = DataBaseHelper.myDataBase.query("movimiento_venta_detalle", null, null, null, null, null, null);
 
             if (cursor.moveToFirst()) {
                 do {
