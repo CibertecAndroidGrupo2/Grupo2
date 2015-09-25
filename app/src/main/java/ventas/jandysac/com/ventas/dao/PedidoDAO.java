@@ -21,13 +21,14 @@ public class PedidoDAO {
         Cursor cursor = null;
 
         try {
-            String query = "SELECT id_movimiento_venta, codigo_cliente, importe_neto AS importe_total FROM movimiento_venta WHERE codigo_cliente = ? ";
+            String query = "SELECT mv.id_movimiento_venta, mv.codigo_cliente, SUM(mvd.importe_neto) AS importe_total, COUNT(mvd.id_movimiento_venta) AS items FROM movimiento_venta mv LEFT JOIN movimiento_venta_detalle mvd ON mvd.id_movimiento_venta = mv.id_movimiento_venta WHERE mv.codigo_cliente = ? GROUP BY mv.id_movimiento_venta  ";
             cursor = DataBaseHelper.myDataBase.rawQuery(query, new String[]{String.valueOf(codigo_cliente)});
             if (cursor.moveToFirst()) {
                 //do {
                     pedidodetalle.setId_Movimiento_Venta(cursor.isNull(cursor.getColumnIndex("id_movimiento_venta")) ? 0 : cursor.getInt(cursor.getColumnIndex("id_movimiento_venta")));
                     pedidodetalle.setCodigo_Cliente(cursor.isNull(cursor.getColumnIndex("codigo_cliente")) ? "" : cursor.getString(cursor.getColumnIndex("codigo_cliente")));
                     pedidodetalle.setImporte_Total(cursor.isNull(cursor.getColumnIndex("importe_total")) ? 0 : cursor.getDouble(cursor.getColumnIndex("importe_total")));
+                    pedidodetalle.setItems(cursor.isNull(cursor.getColumnIndex("items")) ? 0 : cursor.getDouble(cursor.getColumnIndex("items")));
                     //listPedidoCabecera.add(pedidodetalle);
                 //} while (cursor.moveToNext());
             }
@@ -46,7 +47,7 @@ public class PedidoDAO {
         Cursor cursor = null;
 
         try {
-            String query = "SELECT mv.codigo_cliente, mv.importe_neto, mvd.codigo_producto, p.descripcion, mvd.cantidad, mvd.precio, mvd.importe_neto FROM movimiento_venta mv LEFT JOIN movimiento_venta_detalle mvd ON mvd.id_movimiento_venta = mv.id_movimiento_venta LEFT JOIN producto p ON p.codigo= mvd.codigo_producto WHERE mv.id_movimiento_venta = ? ";
+            String query = "SELECT mv.codigo_cliente, mvd.codigo_producto, p.descripcion, mvd.cantidad, mvd.precio, mvd.importe_neto FROM movimiento_venta mv LEFT JOIN movimiento_venta_detalle mvd ON mvd.id_movimiento_venta = mv.id_movimiento_venta LEFT JOIN producto p ON p.codigo= mvd.codigo_producto WHERE mv.id_movimiento_venta = ? ";
             cursor = DataBaseHelper.myDataBase.rawQuery(query, new String[]{String.valueOf(id_movimiento_venta)});
 
             if (cursor.moveToFirst()) {
@@ -77,9 +78,6 @@ public class PedidoDAO {
             cv.put("codigo_empresa", "000001");
             cv.put("codigo_vendedor", "000001");
             cv.put("codigo_cliente", pedidodetalle.getCodigo_Cliente());
-            cv.put("importe_bruto", 0);
-            cv.put("importe_igv", 0);
-            cv.put("importe_neto", 0);
             cv.put("estado", 0);
             codigo = DataBaseHelper.myDataBase.insert("movimiento_venta", null, cv);
         } catch (Exception ex) {
@@ -95,8 +93,6 @@ public class PedidoDAO {
             cv.put("codigo_producto", pedidodetalle.getCodigo_Producto());
             cv.put("cantidad", formato.format(pedidodetalle.getCantidad()));
             cv.put("precio", formato.format(pedidodetalle.getPrecio()));
-            cv.put("importe_bruto", 0);
-            cv.put("importe_igv", 0);
             cv.put("importe_neto", formato.format(pedidodetalle.getPrecio()*pedidodetalle.getCantidad()));
             DataBaseHelper.myDataBase.insert("movimiento_venta_detalle", null, cv);
         } catch (Exception ex) {

@@ -13,12 +13,14 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import ventas.jandysac.com.ventas.adapter.listview.LVPedidoDetalleAdapter;
@@ -29,6 +31,7 @@ import ventas.jandysac.com.ventas.dao.PedidoDAO;
 
 public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleAdapter.RVPedidoDetalleAdapterCallBack {
 
+    DecimalFormat formato = new DecimalFormat("###.##");
     public final static String ARG_COD_CLIENTE = "arg_cod_cliente";
     public final static String ARG_CLIENTE = "cliente";
     TextView txtTotalPedido, txtItemsPedido;
@@ -70,8 +73,8 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
             //mLstPedidoCabecera = pedido.listPedidoCabecera(codigo_cliente);
 
             //PedidoDetalle pedidocabecera = new PedidoDAO().listPedidoCabecera(codigo_cliente);
-            txtTotalPedido.setText(String.valueOf(pedidodetalle.getImporte_Total()));
-            txtItemsPedido.setText("1");
+            txtTotalPedido.setText(String.valueOf(formato.format(pedidodetalle.getImporte_Total())));
+            txtItemsPedido.setText(String.valueOf(formato.format(pedidodetalle.getItems())));
 
 
             lvPedidoDetalle = (ListView) findViewById(R.id.lvPedidoDetalle);
@@ -81,7 +84,9 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
             mLstPedidoDetalle = detalleGuardar.listPedidoDetalle(String.valueOf(pedidodetalle.getId_Movimiento_Venta()));
             mLVPedidoDetalleAdapter = new LVPedidoDetalleAdapter(DetallePedido.this, 0, mLstPedidoDetalle);
             lvPedidoDetalle.setAdapter(mLVPedidoDetalleAdapter);
+            lvPedidoDetalle.setOnItemClickListener(lvPedidoDetalleOnItemClickListener);
         }
+
         btnAgregarProducto.setOnClickListener(btnAgregarProductoOnClickListener);
         btnGuardarPedido.setOnClickListener(btnGuardarPedidoOnClickListener);
     }
@@ -91,12 +96,11 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
         public void onClick(View v) {
             String codigo_cliente = getIntent().getStringExtra(DatosCliente.ARG_COD_CLIENTE);
             PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
-            Toast.makeText(DetallePedido.this, String.valueOf(codigo_cliente), Toast.LENGTH_SHORT).show();
-            Toast.makeText(DetallePedido.this, String.valueOf(pedidodetalle.getId_Movimiento_Venta()), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(DetallePedido.this, BusquedaProducto.class);
             intent.putExtra(ARG_COD_CLIENTE, codigo_cliente);
             intent.putExtra(ARG_CLIENTE, pedidodetalle);
             startActivity(intent);
+            finish();
         }
     };
 
@@ -112,6 +116,19 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
         }
     };
 
+    AdapterView.OnItemClickListener lvPedidoDetalleOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+//            Persona persona = mLstPersona.get(position);
+//            Persona persona = (Persona) parent.getItemAtPosition(position);
+//            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+//            intent.putExtra(ARG_PERSONA, persona);
+//            intent.putExtra(ARG_POSITION, position);
+//            startActivityForResult(intent, REQUEST_CODE_CLICK);
+            Toast.makeText(DetallePedido.this, "Ingrese la cantidad...", Toast.LENGTH_SHORT).show();
+        }
+    };
     @Override
     public void onPedidoDetalleClick(PedidoDetalle pedidodetalle) {
 
