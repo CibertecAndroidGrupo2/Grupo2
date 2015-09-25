@@ -29,6 +29,8 @@ import ventas.jandysac.com.ventas.dao.PedidoDAO;
 
 public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleAdapter.RVPedidoDetalleAdapterCallBack {
 
+    public final static String ARG_COD_CLIENTE = "arg_cod_cliente";
+    public final static String ARG_CLIENTE = "cliente";
     TextView txtTotalPedido, txtItemsPedido;
     private ImageButton btnAgregarProducto, btnGuardarPedido;
     private ArrayList mLstPedidoCabecera;
@@ -87,7 +89,13 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
     View.OnClickListener btnAgregarProductoOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            String codigo_cliente = getIntent().getStringExtra(DatosCliente.ARG_COD_CLIENTE);
+            PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
+            Toast.makeText(DetallePedido.this, String.valueOf(codigo_cliente), Toast.LENGTH_SHORT).show();
+            Toast.makeText(DetallePedido.this, String.valueOf(pedidodetalle.getId_Movimiento_Venta()), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(DetallePedido.this, BusquedaProducto.class);
+            intent.putExtra(ARG_COD_CLIENTE, codigo_cliente);
+            intent.putExtra(ARG_CLIENTE, pedidodetalle);
             startActivity(intent);
         }
     };
@@ -95,7 +103,11 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
     View.OnClickListener btnGuardarPedidoOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            String codigo_cliente = getIntent().getStringExtra(DatosCliente.ARG_COD_CLIENTE);
+            PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
             Intent intent = new Intent(DetallePedido.this, BusquedaProducto.class);
+            intent.putExtra(ARG_COD_CLIENTE, codigo_cliente);
+            intent.putExtra(ARG_CLIENTE, pedidodetalle);
             startActivity(intent);
         }
     };
