@@ -23,7 +23,7 @@
         android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC1LtreTIen8cF_yUWOhrF13dV9zmsJaHs" />
+            android:value="AIzaSyCoTh7cgJ0nEuoHqzq4Lm9nKKi-J-1E0eQ"/>
 
         <activity
             android:name=".MainActivity"
@@ -56,6 +56,7 @@
             android:name=".DetallePedido"
             android:label="Pedido" >
         </activity>
+        <activity android:name=".ClienteFormActivity"></activity>
     </application>
 
 </manifest>

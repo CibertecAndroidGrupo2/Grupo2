@@ -27,7 +27,7 @@ public class Pedido implements Parcelable {
         return codigo_vendedor;
     }
 
-    public void setDodigo_Vendedor(String codigo_vendedor) {
+    public void setCodigo_Vendedor(String codigo_vendedor) {
         this.codigo_vendedor = codigo_vendedor;
     }
     public double getPrecio() {

@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,15 +20,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-
 import ventas.jandysac.com.ventas.adapter.recyclerview.RVClienteAdapter;
 import ventas.jandysac.com.ventas.dao.DataBaseHelper;
-import ventas.jandysac.com.ventas.dao.UsuarioDAO;
 import ventas.jandysac.com.ventas.entities.Cliente;
-import ventas.jandysac.com.ventas.entities.Usuario;
-import ventas.jandysac.com.ventas.util.AesCbcWithIntegrity;
 
 import static ventas.jandysac.com.ventas.util.AesCbcWithIntegrity.decryptString;
 import static ventas.jandysac.com.ventas.util.AesCbcWithIntegrity.generateKeyFromPassword;
@@ -41,7 +34,7 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
     /* DrawerLayout Section */
     private DrawerLayout dlmenu;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private TextView tvOpcionUsuario, tvOpcion1, tvOpcion2, tvOpcion3, tvOpcion4, tvOpcionAyuda,tvOpcionCerrarSes;
+    private TextView tvOpcionUsuario, tvOpcion1, tvOpcion2, tvOpcion3, tvOpcion4, tvOpcionAyuda, tvOpcionCerrarSes;
     /* End DrawerLayout Section */
 
     private EditText txtBusqueda;
@@ -133,15 +126,15 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
 
         public void onClick(View view) {
 
-            String opcActual =  ((TextView) view).getText().toString();
+            String opcActual = ((TextView) view).getText().toString();
 
-            if(opcActual.equals(getResources().getString(R.string.drawer_item_agregar_Pedido))){
-                    Intent intent = new Intent(BusquedaCliente.this, MainActivity.class);
-                    startActivity(intent);
-            }else if(opcActual.equals(getResources().getString(R.string.drawer_item_consolidar_pedido))){
+            if (opcActual.equals(getResources().getString(R.string.drawer_item_agregar_Pedido))) {
+                Intent intent = new Intent(BusquedaCliente.this, MainActivity.class);
+                startActivity(intent);
+            } else if (opcActual.equals(getResources().getString(R.string.drawer_item_consolidar_pedido))) {
                 Intent intent = new Intent(BusquedaCliente.this, ConsolidarPedido.class);
                 startActivity(intent);
-            }else if(opcActual.equals(getResources().getString(R.string.drawer_item_cerrar_session))){
+            } else if (opcActual.equals(getResources().getString(R.string.drawer_item_cerrar_session))) {
                 getSharedPreferences(getPackageName(), MODE_PRIVATE).edit().clear().commit();
 
                 Intent intent = new Intent(BusquedaCliente.this, MainActivity.class);
@@ -175,6 +168,14 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
         Intent intent = new Intent(BusquedaCliente.this, DatosCliente.class);
         intent.putExtra(ARG_CLIENTE, cliente);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClienteLongClick(Cliente cliente) {
+        Intent intent = new Intent(BusquedaCliente.this, ClienteFormActivity.class);
+        intent.putExtra(ClienteFormActivity.ARG_OPERACION, ClienteFormActivity.REQUEST_CODE_UPDATE_DELETE);
+        intent.putExtra(ARG_CLIENTE, cliente);
+        startActivityForResult(intent, ClienteFormActivity.REQUEST_CODE_UPDATE_DELETE);
     }
 
     @Override
@@ -218,15 +219,46 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.itLogout) {
-            getSharedPreferences(getPackageName(), MODE_PRIVATE).edit().clear().commit();
-
-            Intent intent = new Intent(BusquedaCliente.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.itAgregar:
+                Intent intent = new Intent(BusquedaCliente.this, ClienteFormActivity.class);
+                intent.putExtra(ClienteFormActivity.ARG_OPERACION, ClienteFormActivity.REQUEST_CODE_INSERT);
+                startActivityForResult(intent, ClienteFormActivity.REQUEST_CODE_INSERT);
+                return true;
+            case R.id.itLogout:
+                getSharedPreferences(getPackageName(), MODE_PRIVATE).edit().clear().commit();
+                /*Intent intent = new Intent(BusquedaCliente.this, MainActivity.class);
+                startActivity(intent);*/
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == ClienteFormActivity.REQUEST_CODE_INSERT) {
+                rvClienteAdapter = new RVClienteAdapter(BusquedaCliente.this);
+                rvCliente.setHasFixedSize(true);
+                rvCliente.setLayoutManager(new LinearLayoutManager(BusquedaCliente.this));
+                rvCliente.setAdapter(rvClienteAdapter);
+                //rvPersonasAdapter.notifyDataSetChanged();
+            }
+            /*if (requestCode == ClienteFormActivity.REQUEST_CODE_INSERT) {
+                rvClienteAdapter = new RVClienteAdapter(BusquedaCliente.this);
+                rvCliente.setHasFixedSize(true);
+                rvCliente.setLayoutManager(new LinearLayoutManager(BusquedaCliente.this));
+                rvCliente.setAdapter(rvClienteAdapter);
+                //rvPersonasAdapter.notifyDataSetChanged();
+            }*/
+
+        } else {
+            Toast.makeText(BusquedaCliente.this, "El usuario canceló operación", Toast.LENGTH_SHORT).show();
+        }
     }
 }

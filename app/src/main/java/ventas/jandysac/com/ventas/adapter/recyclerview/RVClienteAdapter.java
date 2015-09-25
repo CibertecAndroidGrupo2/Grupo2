@@ -33,6 +33,7 @@ public class RVClienteAdapter extends RecyclerView.Adapter<RVClienteAdapter.RVCl
 
     public interface RVClienteAdapterCallBack {
         void onClienteClick(Cliente cliente);
+        void onClienteLongClick(Cliente cliente);
     }
 
     public RVClienteAdapter(RVClienteAdapterCallBack mRVClienteAdapterCallBack) {
@@ -54,6 +55,9 @@ public class RVClienteAdapter extends RecyclerView.Adapter<RVClienteAdapter.RVCl
 
         rvClienteAdapterViewHolder.itemView.setTag(i);
         rvClienteAdapterViewHolder.itemView.setOnClickListener(itemViewOnClickListener);
+
+
+        rvClienteAdapterViewHolder.itemView.setOnLongClickListener(itemViewOnLongClickListener);
         //rvClienteAdapterViewHolder.tvCodigo.setText(cliente.getCodigo());
         rvClienteAdapterViewHolder.tvNombreCompleto.setText(cliente.getNombre_completo());
     }
@@ -63,6 +67,18 @@ public class RVClienteAdapter extends RecyclerView.Adapter<RVClienteAdapter.RVCl
         public void onClick(View view) {
             if (mRVClienteAdapterCallBack != null)
                 mRVClienteAdapterCallBack.onClienteClick(mLstClienteFilter.get((int) view.getTag()));
+        }
+    };
+
+    View.OnLongClickListener itemViewOnLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            if (mRVClienteAdapterCallBack != null) {
+                mRVClienteAdapterCallBack.onClienteLongClick(mLstClienteFilter.get((int) v.getTag()));
+                return true;
+            } else {
+                return false;
+            }
         }
     };
 

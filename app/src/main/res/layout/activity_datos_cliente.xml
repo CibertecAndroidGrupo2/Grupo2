@@ -105,7 +105,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_my_location_white_48dp"
+            android:drawableLeft="@drawable/ic_my_location_white_24dp"
             android:text="@string/label_mapa" />
 
         <Button
@@ -113,7 +113,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_shopping_cart_white_48dp"
+            android:drawableLeft="@drawable/ic_shopping_cart_white_24dp"
             android:text="@string/label_pedido" />
 
     </LinearLayout>

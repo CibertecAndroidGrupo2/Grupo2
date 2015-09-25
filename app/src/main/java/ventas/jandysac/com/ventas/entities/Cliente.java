@@ -7,6 +7,7 @@ import android.os.Parcelable;
  * Created by Rodolfo on 09/09/2015.
  */
 public class Cliente implements Parcelable {
+    private int clienteID;
     private String codigo;
     private String apellido_paterno;
     private String apellido_materno;
@@ -17,6 +18,14 @@ public class Cliente implements Parcelable {
     private String coodenadas;
 
     public Cliente() {
+    }
+
+    public int getClienteID() {
+        return clienteID;
+    }
+
+    public void setClienteID(int clienteID) {
+        this.clienteID = clienteID;
     }
 
     public String getCodigo() {
@@ -83,7 +92,10 @@ public class Cliente implements Parcelable {
         this.coodenadas = coodenadas;
     }
 
+
+
     protected Cliente(Parcel in) {
+        clienteID = in.readInt();
         codigo = in.readString();
         apellido_paterno = in.readString();
         apellido_materno = in.readString();
@@ -101,6 +113,7 @@ public class Cliente implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(clienteID);
         dest.writeString(codigo);
         dest.writeString(apellido_paterno);
         dest.writeString(apellido_materno);
