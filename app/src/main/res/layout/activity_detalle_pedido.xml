@@ -24,20 +24,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Total S/. "
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Items "
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="4"
             android:orientation="vertical">
 
             <TextView
@@ -60,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
-            android:layout_weight="2">
+            android:layout_weight="3">
             <ImageButton
                 android:id="@+id/btnAgregarProducto"
                 android:layout_width="35dp"
@@ -80,16 +80,22 @@
                 android:src="@drawable/ic_save_white_18dp" />
         </LinearLayout>
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="#C5CAE9"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        android:background="#000000"
+        android:alpha="0.5">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#B6B6B6"
         android:orientation="vertical"
-        android:paddingBottom="10dp"
+        android:paddingBottom="6dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="10dp">
+        android:paddingTop="6dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -143,7 +149,13 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        android:background="#000000"
+        android:alpha="0.5">
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

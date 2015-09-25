@@ -44,7 +44,7 @@ public class DatosCliente extends AppCompatActivity {
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(BusquedaCliente.ARG_CLIENTE)) {
             Cliente cliente = getIntent().getParcelableExtra(BusquedaCliente.ARG_CLIENTE);
 
-
+            getSupportActionBar().setTitle(String.valueOf(cliente.getNombre_completo()));
             tvClienteCodigo.setText(cliente.getCodigo());
             tvClienteNombre.setText(cliente.getNombre_completo());
             tvClienteDireccion.setText(cliente.getDireccion());
@@ -84,7 +84,7 @@ public class DatosCliente extends AppCompatActivity {
                 pedidodetalle.setId_Movimiento_Venta(pedidocabecera.getId_Movimiento_Venta());
                 pedidodetalle.setCodigo_Cliente(pedidocabecera.getCodigo_Cliente());
                 pedidodetalle.setImporte_Total(pedidocabecera.getImporte_Total());
-
+                pedidodetalle.setItems(pedidocabecera.getItems());
                 Intent intent = new Intent(DatosCliente.this, DetallePedido.class);
                 intent.putExtra(ARG_COD_CLIENTE, codigoCliente);
                 intent.putExtra(ARG_CLIENTE, pedidodetalle);
