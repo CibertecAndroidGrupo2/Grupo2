@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,15 +20,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-
 import ventas.jandysac.com.ventas.adapter.recyclerview.RVClienteAdapter;
 import ventas.jandysac.com.ventas.dao.DataBaseHelper;
-import ventas.jandysac.com.ventas.dao.UsuarioDAO;
 import ventas.jandysac.com.ventas.entities.Cliente;
-import ventas.jandysac.com.ventas.entities.Usuario;
-import ventas.jandysac.com.ventas.util.AesCbcWithIntegrity;
 
 import static ventas.jandysac.com.ventas.util.AesCbcWithIntegrity.decryptString;
 import static ventas.jandysac.com.ventas.util.AesCbcWithIntegrity.generateKeyFromPassword;
@@ -139,7 +132,7 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
                     Intent intent = new Intent(BusquedaCliente.this, MainActivity.class);
                     startActivity(intent);
             }else if(opcActual.equals(getResources().getString(R.string.drawer_item_consolidar_pedido))){
-                Intent intent = new Intent(BusquedaCliente.this, ConsolidarPedido.class);
+                Intent intent = new Intent(BusquedaCliente.this, ConsolidarPedidoActivity.class);
                 startActivity(intent);
             }else if(opcActual.equals(getResources().getString(R.string.drawer_item_cerrar_session))){
                 getSharedPreferences(getPackageName(), MODE_PRIVATE).edit().clear().commit();

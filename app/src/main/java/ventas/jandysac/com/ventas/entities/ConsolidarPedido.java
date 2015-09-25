@@ -7,16 +7,16 @@ import android.os.Parcelable;
  * Created by GaryV on 24/09/2015.
  */
 
-public class ConsolidadPedido implements Parcelable {
+public class ConsolidarPedido implements Parcelable {
     private String nombre;
     private int items;
     private double total;
 
 
-    public ConsolidadPedido() {
+    public ConsolidarPedido() {
     }
 
-    public ConsolidadPedido(String nombre, int items, double total) {
+    public ConsolidarPedido(String nombre, int items, double total) {
         this.nombre = nombre;
         this.items = items;
         this.total = total;
@@ -46,7 +46,7 @@ public class ConsolidadPedido implements Parcelable {
         this.total = total;
     }
 
-    protected ConsolidadPedido(Parcel in) {
+    protected ConsolidarPedido(Parcel in) {
         nombre = in.readString();
         items = in.readInt();
         total = in.readDouble();
@@ -65,15 +65,15 @@ public class ConsolidadPedido implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<ConsolidadPedido> CREATOR = new Parcelable.Creator<ConsolidadPedido>() {
+    public static final Parcelable.Creator<ConsolidarPedido> CREATOR = new Parcelable.Creator<ConsolidarPedido>() {
         @Override
-        public ConsolidadPedido createFromParcel(Parcel in) {
-            return new ConsolidadPedido(in);
+        public ConsolidarPedido createFromParcel(Parcel in) {
+            return new ConsolidarPedido(in);
         }
 
         @Override
-        public ConsolidadPedido[] newArray(int size) {
-            return new ConsolidadPedido[size];
+        public ConsolidarPedido[] newArray(int size) {
+            return new ConsolidarPedido[size];
         }
     };
 }

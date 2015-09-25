@@ -44,7 +44,7 @@
             android:label="@string/title_activity_busqueda_producto" >
         </activity>
         <activity
-            android:name=".ConsolidarPedido"
+            android:name=".ConsolidarPedidoActivity"
             android:label="@string/title_activity_consolidar_pedido" >
         </activity>
         <activity android:name=".MapaActivity" />
