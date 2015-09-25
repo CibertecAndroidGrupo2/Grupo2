@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,8 @@ import ventas.jandysac.com.ventas.entities.PedidoDetalle;
  */
 public class RVPedidoDetalleAdapter extends RecyclerView.Adapter<RVPedidoDetalleAdapter.RVPedidoDetalleAdapterViewHolder> implements Filterable {
     private String sFilter = "";
-    private ArrayList<PedidoDetalle> mLstPedidoDetalle, mLstPedidoDetalleFilter;
+    TextView tvClienteCodigo;
+    private ArrayList<PedidoDetalle> mLstPedidoDetalle;
     private RVPedidoDetalleAdapterCallBack mRVPedidoDetalleAdapterCallBack;
     //private RVPedidoDetalleAdapterFilter mRVPedidoDetalleAdapterFilter;
 
@@ -35,10 +37,9 @@ public class RVPedidoDetalleAdapter extends RecyclerView.Adapter<RVPedidoDetalle
 
     public RVPedidoDetalleAdapter(RVPedidoDetalleAdapterCallBack mRVPedidoDetalleAdapterCallBack) {
         this.mRVPedidoDetalleAdapterCallBack = mRVPedidoDetalleAdapterCallBack;
-        mLstPedidoDetalleFilter = new ArrayList<>();
         mLstPedidoDetalle = new ArrayList<>();
-        mLstPedidoDetalle.addAll(new PedidoDAO().listPedidoDetalle());
-        mLstPedidoDetalleFilter.addAll(mLstPedidoDetalle);
+        String id_movimiento_venta = "1";
+        mLstPedidoDetalle.addAll(new PedidoDAO().listPedidoDetalle(id_movimiento_venta));
     }
 
     @Override
@@ -48,34 +49,43 @@ public class RVPedidoDetalleAdapter extends RecyclerView.Adapter<RVPedidoDetalle
 
     @Override
     public void onBindViewHolder(RVPedidoDetalleAdapterViewHolder rvPedidoDetalleAdapterViewHolder, int i) {
-        PedidoDetalle pedidodetalle = mLstPedidoDetalleFilter.get(i);
-
+        PedidoDetalle pedidodetalle = mLstPedidoDetalle.get(i);
         rvPedidoDetalleAdapterViewHolder.itemView.setTag(i);
         rvPedidoDetalleAdapterViewHolder.itemView.setOnClickListener(itemViewOnClickListener);
         //rvPedidoDetalleAdapterViewHolder.tvCodigo.setText(cliente.getCodigo());
-        rvPedidoDetalleAdapterViewHolder.txtDetalleProducto.setText(pedidodetalle.getCodigo_Producto());
+        rvPedidoDetalleAdapterViewHolder.txtDetalleProducto.setText(pedidodetalle.getDescripcion());
+        rvPedidoDetalleAdapterViewHolder.txtDetalleCantidad.setText(String.valueOf(pedidodetalle.getCantidad()));
+        rvPedidoDetalleAdapterViewHolder.txtDetallePrecio.setText(String.valueOf(pedidodetalle.getPrecio()));
+        rvPedidoDetalleAdapterViewHolder.txtDetalleSubtotal.setText(String.valueOf(pedidodetalle.getImporte_Neto()));
+    }
+
+    @Override
+    public int getItemCount() {
+        return 0;
     }
 
     View.OnClickListener itemViewOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (mRVPedidoDetalleAdapterCallBack != null)
-                mRVPedidoDetalleAdapterCallBack.onPedidoDetalleClick(mLstPedidoDetalleFilter.get((int) view.getTag()));
+
         }
     };
 
-    @Override
-    public int getItemCount() {
-        return mLstPedidoDetalleFilter.size();
-    }
+
 
     static class RVPedidoDetalleAdapterViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCodigo, txtDetalleProducto;
+        TextView txtDetalleProducto, txtDetalleCantidad, txtDetallePrecio, txtDetalleSubtotal;
+        TextView txtTotalPedido, txtItemsPedido;
 
         public RVPedidoDetalleAdapterViewHolder(View itemView) {
             super(itemView);
             //tvCodigo = (TextView) itemView.findViewById(R.id.txtCodigo);
             txtDetalleProducto = (TextView) itemView.findViewById(R.id.txtDetalleProducto);
+            txtDetalleCantidad = (TextView) itemView.findViewById(R.id.txtDetalleCantidad);
+            txtDetallePrecio = (TextView) itemView.findViewById(R.id.txtDetallePrecio);
+            txtDetalleSubtotal = (TextView) itemView.findViewById(R.id.txtDetalleSubtotal);
+            txtTotalPedido = (TextView) itemView.findViewById(R.id.txtTotalPedido);
+            txtItemsPedido = (TextView) itemView.findViewById(R.id.txtItemsPedido);
         }
     }
 }

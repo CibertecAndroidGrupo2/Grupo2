@@ -47,7 +47,6 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_busqueda_producto);
-
         //getSupportActionBar().setIcon(R.drawable.ic_lock_black_24dp);
         txtBusquedaProducto = (EditText) findViewById(R.id.txtBusquedaProducto);
         rvProducto = (RecyclerView) findViewById(R.id.rvProducto);
@@ -139,8 +138,9 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
             @Override
             public void onClick(View v) {
                 TextView txtUiProductoCantidad = (TextView) dialog.findViewById(R.id.txtUiProductoCantidad);
-
+                PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
                 PedidoDetalle pedido = new PedidoDetalle();
+                pedido.setId_Movimiento_Venta(pedidodetalle.getId_Movimiento_Venta());
                 pedido.setCodigo_Producto(producto.getCodigo());
                 pedido.setCantidad(Double.valueOf(txtUiProductoCantidad.getText().toString()));
                 pedido.setPrecio(Double.valueOf(producto.getPrecio()));
@@ -152,7 +152,7 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
                 //    dataGuardar.updatePersona(persona);
                 //} else {
                     dataGuardar.addPedidoDetalle(pedido);
-                    Toast.makeText(BusquedaProducto.this, "Prodcuto "+producto.getCodigo()+" fue añadido...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BusquedaProducto.this, "Producto "+producto.getCodigo()+" fue añadido...", Toast.LENGTH_SHORT).show();
                 //}
 
 

@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
@@ -17,7 +17,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <TextView
@@ -37,7 +37,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <TextView
@@ -59,8 +59,25 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
-
+            android:paddingLeft="20dp"
+            android:layout_weight="2">
+            <ImageButton
+                android:id="@+id/btnAgregarProducto"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="right"
+                android:elevation="10dp"
+                android:background="@drawable/button_agregar_pedido"
+                android:src="@drawable/ic_add_white_18dp" />
+            <ImageButton
+                android:id="@+id/btnGuardarPedido"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="right"
+                android:layout_marginLeft="10dp"
+                android:elevation="10dp"
+                android:background="@drawable/button_agregar_pedido"
+                android:src="@drawable/ic_save_white_18dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -134,8 +151,12 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvPedidoDetalle"
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/rvPedidoDetalle"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
+        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/lvPedidoDetalle"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
