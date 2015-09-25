@@ -86,38 +86,6 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
 
     @Override
     public void onProductoClick(final Producto producto) {
-        //Intent intent = new Intent(BusquedaProducto.this, UiProductoPrecio.class);
-        //intent.putExtra(CLAVE, producto);
-        //startActivityForResult(intent, CODE1);
-
-
-//        AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaProducto.this);
-//        LayoutInflater inflater = BusquedaProducto.this.getLayoutInflater();
-//
-//        builder.setView(inflater.inflate(R.layout.ui_producto_precio, null));
-//        builder.setTitle(producto.getDescripcion())
-//                .setIcon(R.drawable.ic_lock_black_24dp);
-//
-//        // A�adimos los botones
-//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//                // Click OK
-//                Toast.makeText(BusquedaProducto.this, producto.getCodigo(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//                // Click CANCEL
-//            }
-//        });
-//        // Set other dialog properties
-//
-//        // Creamos u mostramos el AlertDialog
-//        AlertDialog dialog = builder.create();
-//        TextView texto = (TextView) dialog.findViewById(R.id.txtUiProductoPrecio);
-//        texto.setText("11.11");
-//        dialog.show();
-
         final Dialog dialog = new Dialog(BusquedaProducto.this);
         dialog.setContentView(R.layout.ui_producto_precio);
         dialog.setTitle(producto.getDescripcion());
@@ -138,27 +106,23 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
             @Override
             public void onClick(View v) {
                 TextView txtUiProductoCantidad = (TextView) dialog.findViewById(R.id.txtUiProductoCantidad);
+                if (txtUiProductoCantidad.getText().toString().trim().length() <= 0) {
+                    Toast.makeText(BusquedaProducto.this, "Ingrese la cantidad...", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (Integer.valueOf(txtUiProductoCantidad.getText().toString().trim()) == 0) {
+                    Toast.makeText(BusquedaProducto.this, "Ingrese la cantidad...", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
                 PedidoDetalle pedido = new PedidoDetalle();
                 pedido.setId_Movimiento_Venta(pedidodetalle.getId_Movimiento_Venta());
                 pedido.setCodigo_Producto(producto.getCodigo());
                 pedido.setCantidad(Double.valueOf(txtUiProductoCantidad.getText().toString()));
                 pedido.setPrecio(Double.valueOf(producto.getPrecio()));
-
                 PedidoDAO dataGuardar = new PedidoDAO();
-
-                //if (IdPersona != -1) {
-                /*INSERTAMOS*/
-                //    dataGuardar.updatePersona(persona);
-                //} else {
-                    dataGuardar.addPedidoDetalle(pedido);
-                    Toast.makeText(BusquedaProducto.this, "Producto "+producto.getCodigo()+" fue añadido...", Toast.LENGTH_SHORT).show();
-                //}
-
-
-
-
-
+                dataGuardar.addPedidoDetalle(pedido);
+                Toast.makeText(BusquedaProducto.this, "Producto "+producto.getCodigo()+" fue añadido...", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });

@@ -15,6 +15,7 @@ public class PedidoDetalle implements Parcelable {
     private double cantidad;
     private double importe_neto;
     private double importe_total;
+    private double items;
 
     public PedidoDetalle() {
     }
@@ -81,6 +82,14 @@ public class PedidoDetalle implements Parcelable {
         this.importe_total = importe_total;
     }
 
+    public double getItems() {
+        return items;
+    }
+
+    public void setItems(double items) {
+        this.items = items;
+    }
+
 
     protected PedidoDetalle(Parcel in) {
         id_movimiento_venta = in.readInt();
@@ -91,6 +100,7 @@ public class PedidoDetalle implements Parcelable {
         cantidad = in.readDouble();
         importe_neto = in.readDouble();
         importe_total = in.readDouble();
+        items = in.readDouble();
     }
 
     @Override
@@ -108,6 +118,7 @@ public class PedidoDetalle implements Parcelable {
         dest.writeDouble(cantidad);
         dest.writeDouble(importe_neto);
         dest.writeDouble(importe_total);
+        dest.writeDouble(items);
     }
 
     @SuppressWarnings("unused")
