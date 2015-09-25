@@ -7,6 +7,7 @@ import android.support.annotation.IntegerRes;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import ventas.jandysac.com.ventas.entities.ConsolidarPedido;
 import ventas.jandysac.com.ventas.entities.PedidoDetalle;
 
 /**
@@ -99,6 +100,51 @@ public class PedidoDAO {
             cv.put("importe_igv", 0);
             cv.put("importe_neto", formato.format(pedidodetalle.getPrecio()*pedidodetalle.getCantidad()));
             DataBaseHelper.myDataBase.insert("movimiento_venta_detalle", null, cv);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public ArrayList<ConsolidarPedido> listPedidosAConsolidar(String cod_usuario) {
+        ArrayList<ConsolidarPedido> listPedidos = new ArrayList<>();
+        Cursor cursor = null;
+
+        try {
+            String query = "SELECT mv.id_movimiento_venta, (c.nombres||' '||c.apellido_paterno|| ' '|| c.apellido_materno )  AS cliente, count(mvd.importe_neto ) AS items, SUM(mvd.importe_neto ) AS totalPedido,mv.estado " +
+                    "FROM movimiento_venta mv "+
+                    " LEFT JOIN movimiento_venta_detalle mvd ON mvd.id_movimiento_venta = mv.id_movimiento_venta " +
+                    " LEFT JOIN cliente c ON mv.codigo_cliente = c.codigo  " +
+                    " GROUP BY mv.id_movimiento_venta, c.nombres " +
+                    " HAVING mv.codigo_vendedor = ? ";
+
+            cursor = DataBaseHelper.myDataBase.rawQuery(query, new String[]{String.valueOf(cod_usuario)});
+
+            if (cursor.moveToFirst()) {
+                do {
+                    ConsolidarPedido pedidos = new ConsolidarPedido();
+                    pedidos.setNombre(cursor.isNull(cursor.getColumnIndex("cliente")) ? "" : cursor.getString(cursor.getColumnIndex("cliente")));
+                    pedidos.setItems(cursor.isNull(cursor.getColumnIndex("items")) ? 0 : cursor.getInt(cursor.getColumnIndex("items")));
+                    pedidos.setTotal(cursor.isNull(cursor.getColumnIndex("totalPedido")) ? 0 : cursor.getDouble(cursor.getColumnIndex("totalPedido")));
+                    pedidos.setEstado(cursor.isNull(cursor.getColumnIndex("estado")) ? 0 : cursor.getInt(cursor.getColumnIndex("estado")));
+
+                    listPedidos.add(pedidos);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+
+        return listPedidos;
+    }
+
+    public void updateEstadoPedido(ConsolidarPedido pedido) {
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("estado", pedido.getEstado());
+            DataBaseHelper.myDataBase.update("movimiento_venta", cv, "id_movimiento_venta = ?", new String[]{String.valueOf(pedido.getIdPedido())});
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -1,15 +1,18 @@
 package ventas.jandysac.com.ventas.adapter.recyclerview;
 
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ventas.jandysac.com.ventas.ConsolidarPedidoActivity;
+import ventas.jandysac.com.ventas.MainActivity;
 import ventas.jandysac.com.ventas.R;
+import ventas.jandysac.com.ventas.dao.PedidoDAO;
 import ventas.jandysac.com.ventas.entities.ConsolidarPedido;
 
 /**
@@ -19,9 +22,18 @@ public class RVConsolidarPedidoAdapter extends RecyclerView.Adapter<RVConsolidar
     private ArrayList<ConsolidarPedido> mLstConsolidarPedido;
     private RVConsolidarPedidoAdapterListener mRVConsolidarPedidoAdapterListener;
 
+    private SharedPreferences sp;
+
     public RVConsolidarPedidoAdapter(RVConsolidarPedidoAdapterListener rvConsolidarPedidoAdapterListener) {
         mLstConsolidarPedido = new ArrayList<>();
         this.mRVConsolidarPedidoAdapterListener = rvConsolidarPedidoAdapterListener;
+    }
+
+    public RVConsolidarPedidoAdapter(RVConsolidarPedidoAdapterListener rvConsolidarPedidoAdapterListener,String cod_vendedor) {
+        mLstConsolidarPedido = new ArrayList<>();
+        this.mRVConsolidarPedidoAdapterListener = rvConsolidarPedidoAdapterListener;
+
+        mLstConsolidarPedido.addAll(new PedidoDAO().listPedidosAConsolidar(cod_vendedor));
     }
 
     public interface  RVConsolidarPedidoAdapterListener{
@@ -38,8 +50,12 @@ public class RVConsolidarPedidoAdapter extends RecyclerView.Adapter<RVConsolidar
         ConsolidarPedido cPerdido = mLstConsolidarPedido.get(position);
 
         rvConsolidarPedidoAdapterViewHolder.tvPedidosNombre.setText(cPerdido.getNombre());
-        rvConsolidarPedidoAdapterViewHolder.tvPedidosItems.setText(cPerdido.getItems());
+        rvConsolidarPedidoAdapterViewHolder.tvPedidosItems.setText(String.valueOf(cPerdido.getItems()));
         rvConsolidarPedidoAdapterViewHolder.tvPedidosTotal.setText(String.valueOf(cPerdido.getTotal()));
+
+        if(cPerdido.getEstado()==1){
+            rvConsolidarPedidoAdapterViewHolder.rbEstadoPedido.setVisibility(View.INVISIBLE);
+        }
 
         rvConsolidarPedidoAdapterViewHolder.itemView.setTag(position);
         rvConsolidarPedidoAdapterViewHolder.itemView.setOnClickListener(itemViewOnClickListener);
@@ -60,15 +76,25 @@ public class RVConsolidarPedidoAdapter extends RecyclerView.Adapter<RVConsolidar
     public int getItemCount() {
         return mLstConsolidarPedido.size();
     }
+    public double getTotal(){
+        double total = 0;
+
+        for (ConsolidarPedido item: mLstConsolidarPedido) {
+            total += item.getTotal();
+        }
+        return total;
+    }
 
     static class RVConsolidarPedidoAdapterViewHolder extends RecyclerView.ViewHolder{
         TextView tvPedidosNombre, tvPedidosItems, tvPedidosTotal;
+        RadioButton rbEstadoPedido;
 
         public RVConsolidarPedidoAdapterViewHolder(View itemView) {
             super(itemView);
             tvPedidosNombre = (TextView) itemView.findViewById(R.id.tvPedidosNombre);
             tvPedidosItems = (TextView) itemView.findViewById(R.id.tvPedidosItems);
             tvPedidosTotal = (TextView) itemView.findViewById(R.id.tvPedidosTotal);
+            rbEstadoPedido = (RadioButton)itemView.findViewById(R.id.rbEstadoPedido);
         }
     }
 }

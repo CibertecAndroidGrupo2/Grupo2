@@ -8,18 +8,23 @@ import android.os.Parcelable;
  */
 
 public class ConsolidarPedido implements Parcelable {
+    private  int idPedido;
     private String nombre;
     private int items;
     private double total;
+    private  int estado;
+
 
 
     public ConsolidarPedido() {
     }
 
-    public ConsolidarPedido(String nombre, int items, double total) {
+    public ConsolidarPedido(int idPedido, String nombre, int items, double total, int estado) {
+        this.idPedido = idPedido;
         this.nombre = nombre;
         this.items = items;
         this.total = total;
+        this.estado = estado;
     }
 
     public String getNombre() {
@@ -45,11 +50,29 @@ public class ConsolidarPedido implements Parcelable {
     public void setTotal(double total) {
         this.total = total;
     }
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
+    public int getIdPedido() {
+        return idPedido;
+    }
+
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
+    }
+
 
     protected ConsolidarPedido(Parcel in) {
+        idPedido = in.readInt();
         nombre = in.readString();
         items = in.readInt();
         total = in.readDouble();
+        estado = in.readInt();
     }
 
     @Override
@@ -59,9 +82,11 @@ public class ConsolidarPedido implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(idPedido);
         dest.writeString(nombre);
         dest.writeInt(items);
         dest.writeDouble(total);
+        dest.writeInt(estado);
     }
 
     @SuppressWarnings("unused")
