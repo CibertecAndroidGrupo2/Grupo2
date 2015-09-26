@@ -169,9 +169,9 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
         PedidoDetalle pedidocabecera = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
         PedidoDetalle pedidodetalle = mLstPedidoDetalle.get(info.position);
         switch (item.getItemId()) {
-            case R.id.mcEditar:
-                Toast.makeText(DetallePedido.this, pedidodetalle.getCodigo_Producto(), Toast.LENGTH_SHORT).show();
-                return true;
+//                case R.id.mcEditar:
+//                    Toast.makeText(DetallePedido.this, pedidodetalle.getCodigo_Producto(), Toast.LENGTH_SHORT).show();
+//                    return true;
             case R.id.mcEliminar:
                 if (IdPedido != -1) {
                     //Toast.makeText(DetallePedido.this, String.valueOf(pedidodetalle.getImporte_Neto()), Toast.LENGTH_SHORT).show();
