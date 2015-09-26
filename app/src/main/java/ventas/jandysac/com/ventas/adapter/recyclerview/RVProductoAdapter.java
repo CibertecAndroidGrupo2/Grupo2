@@ -52,6 +52,7 @@ public class RVProductoAdapter extends RecyclerView.Adapter<RVProductoAdapter.RV
     @Override
     public void onBindViewHolder(RVProductoAdapterViewHolder rvProductoAdapterViewHolder, int i) {
         DecimalFormat formatDec = new DecimalFormat("#.00");
+        DecimalFormat formatDec2 = new DecimalFormat("#");
         Producto producto = mLstProductoFilter.get(i);
 
         rvProductoAdapterViewHolder.itemView.setTag(i);
@@ -59,7 +60,7 @@ public class RVProductoAdapter extends RecyclerView.Adapter<RVProductoAdapter.RV
         //rvProductoAdapterViewHolder.tvCodigo.setText(producto.getCodigo());
         rvProductoAdapterViewHolder.tvDescripcionProducto.setText(producto.getDescripcion());
         rvProductoAdapterViewHolder.tvPrecioProducto.setText("Pre: "+String.valueOf(formatDec.format(producto.getPrecio())));
-        rvProductoAdapterViewHolder.tvStockProducto.setText("Sto: "+String.valueOf(formatDec.format(producto.getStock())));
+        rvProductoAdapterViewHolder.tvStockProducto.setText("Sto: "+String.valueOf(formatDec2.format(producto.getStock())));
     }
 
     View.OnClickListener itemViewOnClickListener = new View.OnClickListener() {

@@ -48,12 +48,13 @@ public class PedidoDAO {
         Cursor cursor = null;
 
         try {
-            String query = "SELECT mv.codigo_cliente, mvd.codigo_producto, p.descripcion, mvd.cantidad, mvd.precio, mvd.importe_neto FROM movimiento_venta mv LEFT JOIN movimiento_venta_detalle mvd ON mvd.id_movimiento_venta = mv.id_movimiento_venta LEFT JOIN producto p ON p.codigo= mvd.codigo_producto WHERE mv.id_movimiento_venta = ? ";
+            String query = "SELECT mv.id_movimiento_venta, mv.codigo_cliente, mvd.codigo_producto, p.descripcion, mvd.cantidad, mvd.precio, mvd.importe_neto FROM movimiento_venta mv LEFT JOIN movimiento_venta_detalle mvd ON mvd.id_movimiento_venta = mv.id_movimiento_venta LEFT JOIN producto p ON p.codigo= mvd.codigo_producto WHERE mv.id_movimiento_venta = ? ";
             cursor = DataBaseHelper.myDataBase.rawQuery(query, new String[]{String.valueOf(id_movimiento_venta)});
 
             if (cursor.moveToFirst()) {
                 do {
                     PedidoDetalle pedidodetalle = new PedidoDetalle();
+                    pedidodetalle.setId_Movimiento_Venta(cursor.isNull(cursor.getColumnIndex("id_movimiento_venta")) ? 0 : cursor.getInt(cursor.getColumnIndex("id_movimiento_venta")));
                     pedidodetalle.setCodigo_Producto(cursor.isNull(cursor.getColumnIndex("codigo_producto")) ? "" : cursor.getString(cursor.getColumnIndex("codigo_producto")));
                     pedidodetalle.setDescripcion(cursor.isNull(cursor.getColumnIndex("descripcion")) ? "" : cursor.getString(cursor.getColumnIndex("descripcion")));
                     pedidodetalle.setCantidad(cursor.isNull(cursor.getColumnIndex("cantidad")) ? 0 : cursor.getDouble(cursor.getColumnIndex("cantidad")));
@@ -94,11 +95,46 @@ public class PedidoDAO {
             cv.put("codigo_producto", pedidodetalle.getCodigo_Producto());
             cv.put("cantidad", formato.format(pedidodetalle.getCantidad()));
             cv.put("precio", formato.format(pedidodetalle.getPrecio()));
-            cv.put("importe_neto", formato.format(pedidodetalle.getPrecio()*pedidodetalle.getCantidad()));
+            cv.put("importe_neto", formato.format(pedidodetalle.getPrecio() * pedidodetalle.getCantidad()));
             DataBaseHelper.myDataBase.insert("movimiento_venta_detalle", null, cv);
+
+            ContentValues cv2 = new ContentValues();
+            cv2.put("stock", pedidodetalle.getStock() - pedidodetalle.getCantidad());
+            DataBaseHelper.myDataBase.update("producto", cv2, "codigo = ?", new String[]{String.valueOf(pedidodetalle.getCodigo_Producto())});
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void deletePedidoDetalle(String codigo_producto, Integer id_pedido) {
+        try {
+            DataBaseHelper.myDataBase.delete("movimiento_venta_detalle", "codigo_producto = '" + codigo_producto.trim() + "' AND id_movimiento_venta = " + id_pedido, null);
+            //ContentValues cv = new ContentValues();
+            //cv.put("stock", "stock + 12");
+            //String query = "UPDATE producto SET stock = stock -11 WHERE codigo = ? ";
+            //DataBaseHelper.myDataBase.rawQuery(query, new String[]{codigo_producto});
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public Integer buscarProducto(String codigo_producto, Integer id_pedido) {
+        //ArrayList<PedidoDetalle> listPedidoCabecera = new ArrayList<>();
+        Integer cantidad = 0;
+        Cursor cursor = null;
+        try {
+            String query = "SELECT  COUNT(id_movimiento_venta) AS cantidad FROM movimiento_venta_detalle WHERE id_movimiento_venta = ? AND codigo_producto = ? ";
+            cursor = DataBaseHelper.myDataBase.rawQuery(query, new String[]{String.valueOf(id_pedido),String.valueOf(codigo_producto)});
+            if (cursor.moveToFirst()) {
+                cantidad = cursor.isNull(cursor.getColumnIndex("cantidad")) ? 0 : cursor.getInt(cursor.getColumnIndex("cantidad"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return cantidad;
     }
 
     public ArrayList<ConsolidarPedido> listPedidosAConsolidar(String cod_usuario) {
