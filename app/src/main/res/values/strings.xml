@@ -40,4 +40,6 @@
     <string name="drawer_item_cerrar_session">CERRAR SESSION</string>
     <string name="title_activity_detalle_pedido">DetallePedido</string>
 
+    <string name="seleccion_todos">Todos</string>
+
 </resources>

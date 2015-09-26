@@ -13,18 +13,19 @@ public class ConsolidarPedido implements Parcelable {
     private int items;
     private double total;
     private  int estado;
-
+    private boolean isSelected;
 
 
     public ConsolidarPedido() {
     }
 
-    public ConsolidarPedido(int idPedido, String nombre, int items, double total, int estado) {
+    public ConsolidarPedido(int idPedido, String nombre, int items, double total, int estado, boolean isSelected) {
         this.idPedido = idPedido;
         this.nombre = nombre;
         this.items = items;
         this.total = total;
         this.estado = estado;
+        this.isSelected = isSelected;
     }
 
     public String getNombre() {
@@ -66,6 +67,14 @@ public class ConsolidarPedido implements Parcelable {
         this.idPedido = idPedido;
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
 
     protected ConsolidarPedido(Parcel in) {
         idPedido = in.readInt();
@@ -73,6 +82,7 @@ public class ConsolidarPedido implements Parcelable {
         items = in.readInt();
         total = in.readDouble();
         estado = in.readInt();
+        isSelected = in.readByte() != 0x00;
     }
 
     @Override
@@ -87,6 +97,7 @@ public class ConsolidarPedido implements Parcelable {
         dest.writeInt(items);
         dest.writeDouble(total);
         dest.writeInt(estado);
+        dest.writeByte((byte) (isSelected ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")

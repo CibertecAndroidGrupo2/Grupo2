@@ -111,13 +111,15 @@ public class PedidoDAO {
                     " LEFT JOIN movimiento_venta_detalle mvd ON mvd.id_movimiento_venta = mv.id_movimiento_venta " +
                     " LEFT JOIN cliente c ON mv.codigo_cliente = c.codigo  " +
                     " GROUP BY mv.id_movimiento_venta, c.nombres " +
-                    " HAVING mv.codigo_vendedor = ? ";
+                    " HAVING mv.estado!=1 AND mv.codigo_vendedor = ? ";
 
             cursor = DataBaseHelper.myDataBase.rawQuery(query, new String[]{String.valueOf(cod_usuario)});
 
             if (cursor.moveToFirst()) {
                 do {
                     ConsolidarPedido pedidos = new ConsolidarPedido();
+
+                    pedidos.setIdPedido(cursor.isNull(cursor.getColumnIndex("id_movimiento_venta")) ? 0 : cursor.getInt(cursor.getColumnIndex("id_movimiento_venta")));
                     pedidos.setNombre(cursor.isNull(cursor.getColumnIndex("cliente")) ? "" : cursor.getString(cursor.getColumnIndex("cliente")));
                     pedidos.setItems(cursor.isNull(cursor.getColumnIndex("items")) ? 0 : cursor.getInt(cursor.getColumnIndex("items")));
                     pedidos.setTotal(cursor.isNull(cursor.getColumnIndex("totalPedido")) ? 0 : cursor.getDouble(cursor.getColumnIndex("totalPedido")));
