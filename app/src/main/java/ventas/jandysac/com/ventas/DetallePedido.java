@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import ventas.jandysac.com.ventas.adapter.listview.LVPedidoDetalleAdapter;
 import ventas.jandysac.com.ventas.adapter.recyclerview.RVPedidoDetalleAdapter;
 import ventas.jandysac.com.ventas.dao.DataBaseHelper;
+import ventas.jandysac.com.ventas.entities.ConsolidarPedido;
 import ventas.jandysac.com.ventas.entities.PedidoDetalle;
 import ventas.jandysac.com.ventas.dao.PedidoDAO;
 
@@ -107,14 +109,10 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
         public void onClick(View v) {
             new ProgressAsyncTask().execute();
             PedidoDAO pedidoDao = new PedidoDAO();
-            //pedidoDao.updateEstadoPedido(String.valueOf(IdPedido));
-
-//            String codigo_cliente = getIntent().getStringExtra(DatosCliente.ARG_COD_CLIENTE);
-//            PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
-//            Intent intent = new Intent(DetallePedido.this, BusquedaProducto.class);
-//            intent.putExtra(ARG_COD_CLIENTE, codigo_cliente);
-//            intent.putExtra(ARG_CLIENTE, pedidodetalle);
-//            startActivity(intent);
+            ConsolidarPedido consolida = new ConsolidarPedido();
+            consolida.setIdPedido(IdPedido);
+            consolida.setEstado(1);
+            pedidoDao.updateEstadoPedido(consolida);
         }
     };
 
@@ -127,6 +125,7 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
             Intent intent = new Intent(DetallePedido.this, BusquedaCliente.class);
             startActivity(intent);
             progressDialog.dismiss();
+            finishAffinity();
         }
 
         @Override
@@ -175,12 +174,15 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
                 return true;
             case R.id.mcEliminar:
                 if (IdPedido != -1) {
-                    Toast.makeText(DetallePedido.this, String.valueOf(pedidodetalle.getStock()), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(DetallePedido.this, String.valueOf(pedidodetalle.getImporte_Neto()), Toast.LENGTH_SHORT).show();
                     PedidoDAO pedidoDao = new PedidoDAO();
-                    pedidoDao.deletePedidoDetalle(pedidodetalle.getCodigo_Producto(), IdPedido);
+                    Integer stock = pedidoDao.stockProducto(pedidodetalle.getCodigo_Producto());
+                    pedidoDao.deletePedidoDetalle(pedidodetalle.getCodigo_Producto(), IdPedido, stock, Double.valueOf(pedidodetalle.getCantidad()));
                     mLstPedidoDetalle.remove(info.position);
                     mLVPedidoDetalleAdapter.notifyDataSetChanged();
                     Toast.makeText(DetallePedido.this, "Registro Eliminado...", Toast.LENGTH_SHORT).show();
+                    txtTotalPedido.setText(String.valueOf(formato.format(Double.valueOf(txtTotalPedido.getText().toString()) - pedidodetalle.getImporte_Neto())));
+                    txtItemsPedido.setText(String.valueOf(Integer.valueOf(txtItemsPedido.getText().toString())-1));
                     return true;
                 }
             case R.id.mcCancelar:

@@ -106,13 +106,12 @@ public class PedidoDAO {
         }
     }
 
-    public void deletePedidoDetalle(String codigo_producto, Integer id_pedido) {
+    public void deletePedidoDetalle(String codigo_producto, Integer id_pedido, Integer stock, Double cantidad) {
         try {
             DataBaseHelper.myDataBase.delete("movimiento_venta_detalle", "codigo_producto = '" + codigo_producto.trim() + "' AND id_movimiento_venta = " + id_pedido, null);
-            //ContentValues cv = new ContentValues();
-            //cv.put("stock", "stock + 12");
-            //String query = "UPDATE producto SET stock = stock -11 WHERE codigo = ? ";
-            //DataBaseHelper.myDataBase.rawQuery(query, new String[]{codigo_producto});
+            ContentValues cv = new ContentValues();
+            cv.put("stock", stock + cantidad);
+            DataBaseHelper.myDataBase.update("producto", cv, "codigo = ?", new String[]{String.valueOf(codigo_producto)});
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -135,6 +134,25 @@ public class PedidoDAO {
                 cursor.close();
         }
         return cantidad;
+    }
+
+    public Integer stockProducto(String codigo_producto) {
+        //ArrayList<PedidoDetalle> listPedidoCabecera = new ArrayList<>();
+        Integer stock = 0;
+        Cursor cursor = null;
+        try {
+            String query = "SELECT stock FROM producto WHERE codigo = ? ";
+            cursor = DataBaseHelper.myDataBase.rawQuery(query, new String[]{String.valueOf(codigo_producto)});
+            if (cursor.moveToFirst()) {
+                stock = cursor.isNull(cursor.getColumnIndex("stock")) ? 0 : cursor.getInt(cursor.getColumnIndex("stock"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return stock;
     }
 
     public ArrayList<ConsolidarPedido> listPedidosAConsolidar(String cod_usuario) {
