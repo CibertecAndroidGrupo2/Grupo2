@@ -86,10 +86,20 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
 
     @Override
     public void onProductoClick(final Producto producto) {
+
+        PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
+        PedidoDetalle pedido = new PedidoDetalle();
+        PedidoDAO pedidoDao = new PedidoDAO();
+        Integer cantidad = pedidoDao.buscarProducto(producto.getCodigo(), pedidodetalle.getId_Movimiento_Venta());
+        if (cantidad != 0) {
+            new AlertDialog.Builder(BusquedaProducto.this).setMessage("El producto ya esta añadido en el pedido actual......").setNeutralButton("ACEPTAR", alertOnClickListener).setCancelable(false).show();
+            return;
+        }
+
+
         final Dialog dialog = new Dialog(BusquedaProducto.this);
         dialog.setContentView(R.layout.ui_producto_precio);
         dialog.setTitle(producto.getDescripcion());
-
         TextView txtUiProductoPrecio = (TextView) dialog.findViewById(R.id.txtUiProductoPrecio);
         txtUiProductoPrecio.setText(String.valueOf(formatDec.format(producto.getPrecio())));
 
@@ -105,6 +115,7 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
         dialogButtonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Toast.makeText(BusquedaProducto.this, String.valueOf(producto.getStock()), Toast.LENGTH_SHORT).show();
                 TextView txtUiProductoCantidad = (TextView) dialog.findViewById(R.id.txtUiProductoCantidad);
                 if (txtUiProductoCantidad.getText().toString().trim().length() <= 0) {
                     Toast.makeText(BusquedaProducto.this, "Ingrese la cantidad...", Toast.LENGTH_SHORT).show();
@@ -114,15 +125,25 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
                     Toast.makeText(BusquedaProducto.this, "Ingrese la cantidad...", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (Integer.valueOf(txtUiProductoCantidad.getText().toString().trim()) > producto.getStock()) {
+                    Toast.makeText(BusquedaProducto.this, "No hay suficiente Stock...", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
                 PedidoDetalle pedido = new PedidoDetalle();
                 pedido.setId_Movimiento_Venta(pedidodetalle.getId_Movimiento_Venta());
                 pedido.setCodigo_Producto(producto.getCodigo());
                 pedido.setCantidad(Double.valueOf(txtUiProductoCantidad.getText().toString()));
                 pedido.setPrecio(Double.valueOf(producto.getPrecio()));
+                pedido.setStock(producto.getStock());
                 PedidoDAO dataGuardar = new PedidoDAO();
                 dataGuardar.addPedidoDetalle(pedido);
                 Toast.makeText(BusquedaProducto.this, "Producto "+producto.getCodigo()+" fue añadido...", Toast.LENGTH_SHORT).show();
+                rvProductoAdapter = new RVProductoAdapter(BusquedaProducto.this);
+                rvProducto.setHasFixedSize(true);
+                rvProducto.setLayoutManager(new LinearLayoutManager(BusquedaProducto.this));
+                rvProducto.setAdapter(rvProductoAdapter);
+                txtBusquedaProducto.setText("");
                 dialog.dismiss();
             }
         });
@@ -131,30 +152,10 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.itLogout) {
-            getSharedPreferences(getPackageName(), MODE_PRIVATE).edit().clear().commit();
-
-            Intent intent = new Intent(BusquedaProducto.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            return true;
+    DialogInterface.OnClickListener alertOnClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            dialogInterface.dismiss();
         }
-
-        return super.onOptionsItemSelected(item);
-    }
+    };
 }

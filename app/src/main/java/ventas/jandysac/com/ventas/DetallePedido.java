@@ -1,20 +1,17 @@
 package ventas.jandysac.com.ventas;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.Menu;
+import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,6 +23,7 @@ import java.util.ArrayList;
 import ventas.jandysac.com.ventas.adapter.listview.LVPedidoDetalleAdapter;
 import ventas.jandysac.com.ventas.adapter.recyclerview.RVPedidoDetalleAdapter;
 import ventas.jandysac.com.ventas.dao.DataBaseHelper;
+import ventas.jandysac.com.ventas.entities.ConsolidarPedido;
 import ventas.jandysac.com.ventas.entities.PedidoDetalle;
 import ventas.jandysac.com.ventas.dao.PedidoDAO;
 
@@ -44,6 +42,7 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
     private LVPedidoDetalleAdapter mLVPedidoDetalleAdapter;
     private DataBaseHelper dataBaseHelper;
     private SharedPreferences sp;
+    int IdPedido = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +78,13 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
 
             lvPedidoDetalle = (ListView) findViewById(R.id.lvPedidoDetalle);
             PedidoDetalle pedidoDetalle = new PedidoDetalle();
-            pedidoDetalle.setId_Movimiento_Venta(pedidodetalle.getId_Movimiento_Venta());
+            IdPedido = pedidodetalle.getId_Movimiento_Venta();
+            //pedidoDetalle.setId_Movimiento_Venta(pedidodetalle.getId_Movimiento_Venta());
             PedidoDAO detalleGuardar = new PedidoDAO();
-            mLstPedidoDetalle = detalleGuardar.listPedidoDetalle(String.valueOf(pedidodetalle.getId_Movimiento_Venta()));
+            mLstPedidoDetalle = detalleGuardar.listPedidoDetalle(String.valueOf(IdPedido));
             mLVPedidoDetalleAdapter = new LVPedidoDetalleAdapter(DetallePedido.this, 0, mLstPedidoDetalle);
             lvPedidoDetalle.setAdapter(mLVPedidoDetalleAdapter);
-            lvPedidoDetalle.setOnItemClickListener(lvPedidoDetalleOnItemClickListener);
+            registerForContextMenu(lvPedidoDetalle);
         }
 
         btnAgregarProducto.setOnClickListener(btnAgregarProductoOnClickListener);
@@ -107,29 +107,90 @@ public class DetallePedido extends AppCompatActivity implements RVPedidoDetalleA
     View.OnClickListener btnGuardarPedidoOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String codigo_cliente = getIntent().getStringExtra(DatosCliente.ARG_COD_CLIENTE);
-            PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
-            Intent intent = new Intent(DetallePedido.this, BusquedaProducto.class);
-            intent.putExtra(ARG_COD_CLIENTE, codigo_cliente);
-            intent.putExtra(ARG_CLIENTE, pedidodetalle);
-            startActivity(intent);
+            new ProgressAsyncTask().execute();
+            PedidoDAO pedidoDao = new PedidoDAO();
+            ConsolidarPedido consolida = new ConsolidarPedido();
+            consolida.setIdPedido(IdPedido);
+            consolida.setEstado(1);
+            pedidoDao.updateEstadoPedido(consolida);
         }
     };
 
-    AdapterView.OnItemClickListener lvPedidoDetalleOnItemClickListener = new AdapterView.OnItemClickListener() {
+    class ProgressAsyncTask extends AsyncTask<Void, Void, Void> {
+        ProgressDialog progressDialog;
+
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-//            Persona persona = mLstPersona.get(position);
-//            Persona persona = (Persona) parent.getItemAtPosition(position);
-//            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-//            intent.putExtra(ARG_PERSONA, persona);
-//            intent.putExtra(ARG_POSITION, position);
-//            startActivityForResult(intent, REQUEST_CODE_CLICK);
-            Toast.makeText(DetallePedido.this, "Ingrese la cantidad...", Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Intent intent = new Intent(DetallePedido.this, BusquedaCliente.class);
+            startActivity(intent);
+            progressDialog.dismiss();
+            finishAffinity();
         }
-    };
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(DetallePedido.this);
+            progressDialog.setMessage("Enviando pedido al servidor...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(5000);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        //int mPosition;
+        // Se comprueba si se ha pulsado algún elemento del ListView
+        if (v.getId() == R.id.lvPedidoDetalle){
+            // Obtenemos la posición del elemento que ha sido pulsado.
+            //mPosition = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+            // Establecemos como título del submenú la opción pulsado del ListView
+            //menu.setHeaderTitle(lvPedidoDetalle.getAdapter().getItem(mPosition).toString());
+            // Inflamos el submenú
+            this.getMenuInflater().inflate(R.menu.menu_context, menu);
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        PedidoDetalle pedidocabecera = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
+        PedidoDetalle pedidodetalle = mLstPedidoDetalle.get(info.position);
+        switch (item.getItemId()) {
+//                case R.id.mcEditar:
+//                    Toast.makeText(DetallePedido.this, pedidodetalle.getCodigo_Producto(), Toast.LENGTH_SHORT).show();
+//                    return true;
+            case R.id.mcEliminar:
+                if (IdPedido != -1) {
+                    //Toast.makeText(DetallePedido.this, String.valueOf(pedidodetalle.getImporte_Neto()), Toast.LENGTH_SHORT).show();
+                    PedidoDAO pedidoDao = new PedidoDAO();
+                    Integer stock = pedidoDao.stockProducto(pedidodetalle.getCodigo_Producto());
+                    pedidoDao.deletePedidoDetalle(pedidodetalle.getCodigo_Producto(), IdPedido, stock, Double.valueOf(pedidodetalle.getCantidad()));
+                    mLstPedidoDetalle.remove(info.position);
+                    mLVPedidoDetalleAdapter.notifyDataSetChanged();
+                    Toast.makeText(DetallePedido.this, "Registro Eliminado...", Toast.LENGTH_SHORT).show();
+                    txtTotalPedido.setText(String.valueOf(formato.format(Double.valueOf(txtTotalPedido.getText().toString()) - pedidodetalle.getImporte_Neto())));
+                    txtItemsPedido.setText(String.valueOf(Integer.valueOf(txtItemsPedido.getText().toString())-1));
+                    return true;
+                }
+            case R.id.mcCancelar:
+                return false;
+        }
+        return super.onContextItemSelected(item);
+    }
+
     public void onPedidoDetalleClick(PedidoDetalle pedidodetalle) {
 
     }

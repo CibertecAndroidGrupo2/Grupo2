@@ -4,16 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ventas.jandysac.com.ventas.adapter.spinner.SPTipoDocAdapter;
 import ventas.jandysac.com.ventas.dao.ClienteDAO;
@@ -23,6 +23,7 @@ public class ClienteFormActivity extends AppCompatActivity {
 
     public final static String ARG_CLIENTE = "arg_cliente";
     public final static String ARG_OPERACION = "arg_operacion";
+    private final static String LATLOG_PATTERN = "^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$";
 
     public final static int REQUEST_CODE_INSERT = 1;
     public final static int REQUEST_CODE_UPDATE_DELETE = 2;
@@ -71,13 +72,12 @@ public class ClienteFormActivity extends AppCompatActivity {
                     tilNombres.getEditText().setText(cliente.getNombres());
                     tilDireccion.getEditText().setText(String.valueOf(cliente.getDireccion()));
                     tilCoordenadas.getEditText().setText(String.valueOf(cliente.getCoodenadas()));
+                    tilCodigo.getEditText().setText(String.valueOf(cliente.getCodigo()));
 
                     int spinnerPosition = mSPTipoDocAdapter.getPosition(cliente.getTipo_doc());
                     spTipoDoc.setSelection(spinnerPosition);
 
-                    Log.i("ClienteFormActivity", "seteando  variable clienteID: " + cliente.getClienteID());
                     clienteID = cliente.getClienteID();
-                    Log.i("ClienteFormActivity", "variable clienteID seteada: " + clienteID);
 
                     /*btGuardar.setOnClickListener(btActualizarOnClickListener);
                     btEliminar.setOnClickListener(btEliminarOnClickListener);*/
@@ -119,7 +119,6 @@ public class ClienteFormActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.action_guardar:
-                Toast.makeText(ClienteFormActivity.this, item.getTitle().toString(), Toast.LENGTH_SHORT).show();
 
                 String am = tilApellidoMaterno.getEditText().getText().toString().trim();
                 String ap = tilApellidoPaterno.getEditText().getText().toString().trim();
@@ -130,6 +129,10 @@ public class ClienteFormActivity extends AppCompatActivity {
 
                 boolean error = false;
 
+                if (co.length() < 1) {
+                    tilCodigo.setError("Ingrese su codigo");
+                    error = true;
+                }
                 if (n.length() < 1) {
                     tilNombres.setError("Ingrese su nombre");
                     error = true;
@@ -149,6 +152,11 @@ public class ClienteFormActivity extends AppCompatActivity {
                 if (c.length() < 1) {
                     tilCoordenadas.setError("Ingrese sus coordenadas");
                     error = true;
+                } else {
+                    if (!this.isMatch(c, LATLOG_PATTERN)){
+                        tilCoordenadas.setError("Coordenadas no validas");
+                        error = true;
+                    }
                 }
 
                 if (error == false) {
@@ -167,19 +175,18 @@ public class ClienteFormActivity extends AppCompatActivity {
                     if (operacion == ClienteFormActivity.REQUEST_CODE_INSERT) {
                         new ClienteDAO().addCliente(cliente);
                     } else if (operacion == ClienteFormActivity.REQUEST_CODE_UPDATE_DELETE) {
-                        Log.i("ClienteFormActivity", "update");
                         cliente.setClienteID(clienteID);
 
-                        Log.i("ClienteFormActivity", "codigo: " + cliente.getCodigo());
                         new ClienteDAO().updateCliente(cliente);
                     }
-
 
                     intent.putExtra(ClienteFormActivity.ARG_CLIENTE, cliente);
 
                     setResult(RESULT_OK, intent);
                     finish();
 
+                } else{
+                    Toast.makeText(ClienteFormActivity.this, "Validar la información ingresada", Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
@@ -188,4 +195,15 @@ public class ClienteFormActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private boolean isMatch(String s, String pattern) {
+        try {
+            Pattern patt = Pattern.compile(pattern);
+            Matcher matcher = patt.matcher(s);
+            return matcher.matches();
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
 }
