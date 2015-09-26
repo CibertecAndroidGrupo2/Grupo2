@@ -9,6 +9,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import ventas.jandysac.com.ventas.R;
@@ -49,14 +50,16 @@ public class RVPedidoDetalleAdapter extends RecyclerView.Adapter<RVPedidoDetalle
 
     @Override
     public void onBindViewHolder(RVPedidoDetalleAdapterViewHolder rvPedidoDetalleAdapterViewHolder, int i) {
+        DecimalFormat formatDec = new DecimalFormat("#.00");
+        DecimalFormat formatDec2 = new DecimalFormat("#");
         PedidoDetalle pedidodetalle = mLstPedidoDetalle.get(i);
         rvPedidoDetalleAdapterViewHolder.itemView.setTag(i);
         rvPedidoDetalleAdapterViewHolder.itemView.setOnClickListener(itemViewOnClickListener);
         //rvPedidoDetalleAdapterViewHolder.tvCodigo.setText(cliente.getCodigo());
         rvPedidoDetalleAdapterViewHolder.txtDetalleProducto.setText(pedidodetalle.getDescripcion());
-        rvPedidoDetalleAdapterViewHolder.txtDetalleCantidad.setText(String.valueOf(pedidodetalle.getCantidad()));
-        rvPedidoDetalleAdapterViewHolder.txtDetallePrecio.setText(String.valueOf(pedidodetalle.getPrecio()));
-        rvPedidoDetalleAdapterViewHolder.txtDetalleSubtotal.setText(String.valueOf(pedidodetalle.getImporte_Neto()));
+        rvPedidoDetalleAdapterViewHolder.txtDetalleCantidad.setText(String.valueOf(formatDec2.format(pedidodetalle.getCantidad())));
+        rvPedidoDetalleAdapterViewHolder.txtDetallePrecio.setText(String.valueOf(formatDec.format(pedidodetalle.getPrecio())));
+        rvPedidoDetalleAdapterViewHolder.txtDetalleSubtotal.setText(String.valueOf(formatDec.format(pedidodetalle.getImporte_Neto())));
     }
 
     @Override

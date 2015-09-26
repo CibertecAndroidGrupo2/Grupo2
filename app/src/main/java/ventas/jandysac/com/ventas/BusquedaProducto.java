@@ -86,10 +86,20 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
 
     @Override
     public void onProductoClick(final Producto producto) {
+
+        PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
+        PedidoDetalle pedido = new PedidoDetalle();
+        PedidoDAO pedidoDao = new PedidoDAO();
+        Integer cantidad = pedidoDao.buscarProducto(producto.getCodigo(), pedidodetalle.getId_Movimiento_Venta());
+        if (cantidad != 0) {
+            Toast.makeText(BusquedaProducto.this, "El producto ya esta añadido en el pedido actual......", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         final Dialog dialog = new Dialog(BusquedaProducto.this);
         dialog.setContentView(R.layout.ui_producto_precio);
         dialog.setTitle(producto.getDescripcion());
-
         TextView txtUiProductoPrecio = (TextView) dialog.findViewById(R.id.txtUiProductoPrecio);
         txtUiProductoPrecio.setText(String.valueOf(formatDec.format(producto.getPrecio())));
 
@@ -105,6 +115,7 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
         dialogButtonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Toast.makeText(BusquedaProducto.this, String.valueOf(producto.getStock()), Toast.LENGTH_SHORT).show();
                 TextView txtUiProductoCantidad = (TextView) dialog.findViewById(R.id.txtUiProductoCantidad);
                 if (txtUiProductoCantidad.getText().toString().trim().length() <= 0) {
                     Toast.makeText(BusquedaProducto.this, "Ingrese la cantidad...", Toast.LENGTH_SHORT).show();
@@ -114,14 +125,20 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
                     Toast.makeText(BusquedaProducto.this, "Ingrese la cantidad...", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (Integer.valueOf(txtUiProductoCantidad.getText().toString().trim()) > producto.getStock()) {
+                    Toast.makeText(BusquedaProducto.this, "No hay suficiente Stock...", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 PedidoDetalle pedidodetalle = getIntent().getParcelableExtra(DatosCliente.ARG_CLIENTE);
                 PedidoDetalle pedido = new PedidoDetalle();
                 pedido.setId_Movimiento_Venta(pedidodetalle.getId_Movimiento_Venta());
                 pedido.setCodigo_Producto(producto.getCodigo());
                 pedido.setCantidad(Double.valueOf(txtUiProductoCantidad.getText().toString()));
                 pedido.setPrecio(Double.valueOf(producto.getPrecio()));
+                pedido.setStock(producto.getStock());
                 PedidoDAO dataGuardar = new PedidoDAO();
                 dataGuardar.addPedidoDetalle(pedido);
+                //rvProductoAdapter.notifyDataSetChanged();
                 Toast.makeText(BusquedaProducto.this, "Producto "+producto.getCodigo()+" fue añadido...", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }

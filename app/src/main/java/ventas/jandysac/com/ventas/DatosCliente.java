@@ -68,16 +68,13 @@ public class DatosCliente extends AppCompatActivity {
             intent.putExtra(ARG_COORDENADAS, coordenadas);
             intent.putExtra(ARG_NOMBRE_CLIENTE, nombreCliente);
             startActivity(intent);
-
         }
     };
-
 
 
     View.OnClickListener btPedidoOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
             //TODO cambiar BusquedaProducto.class por la actividad de Pedido
             PedidoDetalle pedidodetalle = new PedidoDetalle();
             pedidodetalle.setCodigo_Cliente(codigoCliente);
