@@ -20,6 +20,7 @@
     <string name="label_pedido">Pedido</string>
 
     <!--cliente_form-->
+    <string name="hint_codigo">Código</string>
     <string name="hint_nombres">Nombres</string>
     <string name="hint_apellido_paterno">Apellido Paterno</string>
     <string name="hint_apellido_materno">Apellido Materno</string>

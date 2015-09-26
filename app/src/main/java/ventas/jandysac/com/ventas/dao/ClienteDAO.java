@@ -47,6 +47,7 @@ public class ClienteDAO {
     public void addCliente(Cliente cliente) {
         try {
             ContentValues cv = new ContentValues();
+            cv.put("codigo", cliente.getCodigo());
             cv.put("apellido_paterno", cliente.getApellido_paterno());
             cv.put("apellido_materno", cliente.getApellido_materno());
             cv.put("nombres", cliente.getNombres());
@@ -63,6 +64,7 @@ public class ClienteDAO {
     public void updateCliente(Cliente cliente) {
         try {
             ContentValues cv = new ContentValues();
+            cv.put("codigo", cliente.getCodigo());
             cv.put("apellido_paterno", cliente.getApellido_paterno());
             cv.put("apellido_materno", cliente.getApellido_materno());
             cv.put("nombres", cliente.getNombres());
@@ -70,7 +72,7 @@ public class ClienteDAO {
             cv.put("direccion", cliente.getDireccion());
             cv.put("tipo_doc", cliente.getTipo_doc());
             cv.put("coordenadas", cliente.getCoodenadas());
-            DataBaseHelper.myDataBase.update("Cliente", cv, "codigo = ?", new String[]{String.valueOf(cliente.getCodigo())});
+            DataBaseHelper.myDataBase.update("Cliente", cv, "clienteID = ?", new String[]{String.valueOf(cliente.getClienteID())});
         } catch (Exception ex) {
             ex.printStackTrace();
         }

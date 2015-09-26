@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,18 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-
 import ventas.jandysac.com.ventas.adapter.recyclerview.RVClienteAdapter;
 import ventas.jandysac.com.ventas.dao.DataBaseHelper;
-import ventas.jandysac.com.ventas.dao.UsuarioDAO;
 import ventas.jandysac.com.ventas.entities.Cliente;
-import ventas.jandysac.com.ventas.entities.Usuario;
-import ventas.jandysac.com.ventas.util.AesCbcWithIntegrity;
-
-import static ventas.jandysac.com.ventas.util.AesCbcWithIntegrity.decryptString;
-import static ventas.jandysac.com.ventas.util.AesCbcWithIntegrity.generateKeyFromPassword;
 
 public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapter.RVClienteAdapterCallBack {
 
@@ -254,15 +243,16 @@ public class BusquedaCliente extends AppCompatActivity implements RVClienteAdapt
                 rvCliente.setHasFixedSize(true);
                 rvCliente.setLayoutManager(new LinearLayoutManager(BusquedaCliente.this));
                 rvCliente.setAdapter(rvClienteAdapter);
-                //rvPersonasAdapter.notifyDataSetChanged();
+//                rvClienteAdapter.notifyDataSetChanged();
             }
-            /*if (requestCode == ClienteFormActivity.REQUEST_CODE_INSERT) {
+            if (requestCode == ClienteFormActivity.REQUEST_CODE_UPDATE_DELETE) {
+                txtBusqueda.setText("");
                 rvClienteAdapter = new RVClienteAdapter(BusquedaCliente.this);
                 rvCliente.setHasFixedSize(true);
                 rvCliente.setLayoutManager(new LinearLayoutManager(BusquedaCliente.this));
                 rvCliente.setAdapter(rvClienteAdapter);
-                //rvPersonasAdapter.notifyDataSetChanged();
-            }*/
+//                rvClienteAdapter.notifyDataSetChanged();
+            }
 
         } else {
             Toast.makeText(BusquedaCliente.this, "El usuario canceló operación", Toast.LENGTH_SHORT).show();

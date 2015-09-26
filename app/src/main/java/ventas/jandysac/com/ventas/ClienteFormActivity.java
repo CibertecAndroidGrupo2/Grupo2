@@ -71,13 +71,12 @@ public class ClienteFormActivity extends AppCompatActivity {
                     tilNombres.getEditText().setText(cliente.getNombres());
                     tilDireccion.getEditText().setText(String.valueOf(cliente.getDireccion()));
                     tilCoordenadas.getEditText().setText(String.valueOf(cliente.getCoodenadas()));
+                    tilCodigo.getEditText().setText(String.valueOf(cliente.getCodigo()));
 
                     int spinnerPosition = mSPTipoDocAdapter.getPosition(cliente.getTipo_doc());
                     spTipoDoc.setSelection(spinnerPosition);
 
-                    Log.i("ClienteFormActivity", "seteando  variable clienteID: " + cliente.getClienteID());
                     clienteID = cliente.getClienteID();
-                    Log.i("ClienteFormActivity", "variable clienteID seteada: " + clienteID);
 
                     /*btGuardar.setOnClickListener(btActualizarOnClickListener);
                     btEliminar.setOnClickListener(btEliminarOnClickListener);*/
@@ -130,6 +129,10 @@ public class ClienteFormActivity extends AppCompatActivity {
 
                 boolean error = false;
 
+                if (co.length() < 1) {
+                    tilNombres.setError("Ingrese su codigo");
+                    error = true;
+                }
                 if (n.length() < 1) {
                     tilNombres.setError("Ingrese su nombre");
                     error = true;
@@ -167,10 +170,8 @@ public class ClienteFormActivity extends AppCompatActivity {
                     if (operacion == ClienteFormActivity.REQUEST_CODE_INSERT) {
                         new ClienteDAO().addCliente(cliente);
                     } else if (operacion == ClienteFormActivity.REQUEST_CODE_UPDATE_DELETE) {
-                        Log.i("ClienteFormActivity", "update");
                         cliente.setClienteID(clienteID);
 
-                        Log.i("ClienteFormActivity", "codigo: " + cliente.getCodigo());
                         new ClienteDAO().updateCliente(cliente);
                     }
 
