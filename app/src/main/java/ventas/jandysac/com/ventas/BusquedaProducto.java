@@ -92,7 +92,7 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
         PedidoDAO pedidoDao = new PedidoDAO();
         Integer cantidad = pedidoDao.buscarProducto(producto.getCodigo(), pedidodetalle.getId_Movimiento_Venta());
         if (cantidad != 0) {
-            Toast.makeText(BusquedaProducto.this, "El producto ya esta añadido en el pedido actual......", Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(BusquedaProducto.this).setMessage("El producto ya esta añadido en el pedido actual......").setNeutralButton("ACEPTAR", alertOnClickListener).setCancelable(false).show();
             return;
         }
 
@@ -138,8 +138,12 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
                 pedido.setStock(producto.getStock());
                 PedidoDAO dataGuardar = new PedidoDAO();
                 dataGuardar.addPedidoDetalle(pedido);
-                //rvProductoAdapter.notifyDataSetChanged();
                 Toast.makeText(BusquedaProducto.this, "Producto "+producto.getCodigo()+" fue añadido...", Toast.LENGTH_SHORT).show();
+                rvProductoAdapter = new RVProductoAdapter(BusquedaProducto.this);
+                rvProducto.setHasFixedSize(true);
+                rvProducto.setLayoutManager(new LinearLayoutManager(BusquedaProducto.this));
+                rvProducto.setAdapter(rvProductoAdapter);
+                txtBusquedaProducto.setText("");
                 dialog.dismiss();
             }
         });
@@ -148,30 +152,10 @@ public class BusquedaProducto extends AppCompatActivity implements RVProductoAda
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.itLogout) {
-            getSharedPreferences(getPackageName(), MODE_PRIVATE).edit().clear().commit();
-
-            Intent intent = new Intent(BusquedaProducto.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            return true;
+    DialogInterface.OnClickListener alertOnClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            dialogInterface.dismiss();
         }
-
-        return super.onOptionsItemSelected(item);
-    }
+    };
 }
