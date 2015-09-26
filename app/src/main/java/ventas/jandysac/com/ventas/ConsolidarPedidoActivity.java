@@ -69,24 +69,37 @@ public class ConsolidarPedidoActivity extends AppCompatActivity implements RVCon
             cod_vendedor = sp.getString(MainActivity.ARG_CODIGO, "");
         }
 
-
-        mRVConsolidarPedidoAdapter = new RVConsolidarPedidoAdapter(ConsolidarPedidoActivity.this, cod_vendedor);
-        rvListaPedidos.setAdapter(mRVConsolidarPedidoAdapter);
-
-        tvItemsPedido.setText(String.valueOf(mRVConsolidarPedidoAdapter.getItemCount()));
-        tvTotalPedido.setText(mRVConsolidarPedidoAdapter.getTotal());
-
         btnEnviarPedidos.setOnClickListener(btnEnviarPedidosOnClickListener);
+
+        reloadPedidos();
+
     }
 
     View.OnClickListener btnEnviarPedidosOnClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View view) {
-            new AlertDialog.Builder(ConsolidarPedidoActivity.this).setTitle("Consolidar Pedidos").setMessage("¿Desea Ud. Enviar los Pedidos Seleccionados?").
-                    setNegativeButton("No", alertAcceptCancelCancelOnClickListener).
-                    setPositiveButton("Si", alertAcceptCancelAcceptOnClickListener).
-                    setCancelable(false).show();
+
+            int countSel = 0;
+            mLstConsolidarPedido =  mRVConsolidarPedidoAdapter.lstConsolidarPedido();
+
+            for (int k = 0; k < mLstConsolidarPedido.size(); k++) {
+                ConsolidarPedido pedSelec = mLstConsolidarPedido.get(k);
+                if (pedSelec.isSelected() == true) {
+                    countSel++;
+                }
+            }
+            if(countSel>0)
+            {
+                new AlertDialog.Builder(ConsolidarPedidoActivity.this).setTitle("Consolidar Pedidos").setMessage("¿Desea Ud. Enviar los Pedidos Seleccionados?").
+                        setNegativeButton("No", alertAcceptCancelCancelOnClickListener).
+                        setPositiveButton("Si", alertAcceptCancelAcceptOnClickListener).
+                        setCancelable(false).show();
+            }else {
+                Toast.makeText(ConsolidarPedidoActivity.this,"No hay Pedidos Seleccionados.", Toast.LENGTH_LONG)
+                        .show();
+            }
+
         }
     };
 
@@ -103,26 +116,31 @@ public class ConsolidarPedidoActivity extends AppCompatActivity implements RVCon
         public void onClick(DialogInterface dialogInterface, int i) {
             new ProgressAsyncTask().execute();
 
-            ArrayList<ConsolidarPedido> stList = ((RVConsolidarPedidoAdapter) mRVConsolidarPedidoAdapter)
-                    .lstConsolidarPedido();
-
-            for (int k = 0; k < stList.size(); k++) {
-                ConsolidarPedido pedSelec = stList.get(k);
+            for (int k = 0; k < mLstConsolidarPedido.size(); k++) {
+                ConsolidarPedido pedSelec = mLstConsolidarPedido.get(k);
                 if (pedSelec.isSelected() == true) {
                     pedSelec.setEstado(1);
                     mRVConsolidarPedidoAdapter.updateEstadoPedido(pedSelec);
                 }
-
             }
-            mRVConsolidarPedidoAdapter.clear();
-            mRVConsolidarPedidoAdapter = new RVConsolidarPedidoAdapter(ConsolidarPedidoActivity.this, cod_vendedor);
-            rvListaPedidos.setAdapter(mRVConsolidarPedidoAdapter);
 
+            reloadPedidos();
         }
     };
 
     @Override
     public void onSelectedItem(ConsolidarPedido cPerdido, int position) {
+
+    }
+
+    public void reloadPedidos(){
+
+        mRVConsolidarPedidoAdapter = new RVConsolidarPedidoAdapter(ConsolidarPedidoActivity.this, cod_vendedor);
+        rvListaPedidos.setAdapter(mRVConsolidarPedidoAdapter);
+
+        tvItemsPedido.setText(String.valueOf(mRVConsolidarPedidoAdapter.getItemCount()));
+        tvTotalPedido.setText(mRVConsolidarPedidoAdapter.getTotal());
+
 
     }
 
@@ -146,7 +164,7 @@ public class ConsolidarPedidoActivity extends AppCompatActivity implements RVCon
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
